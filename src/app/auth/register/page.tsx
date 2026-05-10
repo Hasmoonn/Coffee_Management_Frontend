@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Loader2, ArrowRight, AlertCircle, CheckCircle2, User, Mail, Phone, Lock } from "lucide-react";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { apiFetch } from "@/lib/api";
 
 interface FormData {
   name: string;
@@ -138,17 +137,10 @@ export default function RegisterPage() {
       };
       if (formData.phone) body.phone = formData.phone;
 
-      const res = await fetch(`${API_BASE}/auth/register`, {
+      const data = await apiFetch<any>("/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed. Please try again.");
-      }
 
       if (data.data?.accessToken) {
         localStorage.setItem("accessToken", data.data.accessToken);

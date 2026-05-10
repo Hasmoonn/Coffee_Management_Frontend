@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, Loader2, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+import { apiFetch } from "@/lib/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -22,17 +21,10 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
+      const data = await apiFetch<any>("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: { email, password },
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Invalid credentials. Please try again.");
-      }
 
       // Store tokens
       if (data.data?.accessToken) {
