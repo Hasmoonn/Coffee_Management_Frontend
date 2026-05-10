@@ -26,12 +26,12 @@ export default function LoginPage() {
         body: { email, password },
       });
 
-      // Store tokens
-      if (data.data?.accessToken) {
-        localStorage.setItem("accessToken", data.data.accessToken);
+      // Store tokens — apiFetch already unwraps json.data, so payload is flat
+      if (data.accessToken) {
+        localStorage.setItem("accessToken", data.accessToken);
       }
-      if (data.data?.refreshToken) {
-        localStorage.setItem("refreshToken", data.data.refreshToken);
+      if (data.refreshToken) {
+        localStorage.setItem("refreshToken", data.refreshToken);
       }
 
       setSuccess(true);

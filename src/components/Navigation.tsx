@@ -16,13 +16,18 @@ export default function Navigation() {
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { totalItems } = useCart();
+  // Always pass true here; the hook itself only runs the fetch when enabled
   const { user } = useUser(isLoggedIn);
 
+  // On mount: read token from localStorage and set auth state
   useEffect(() => {
     setMounted(true);
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
+  }, []);
 
+  // Scroll handler
+  useEffect(() => {
     const handleScroll = () => {
       const sectionsEl = document.getElementById("sections-wrapper");
       if (sectionsEl) {
@@ -31,16 +36,16 @@ export default function Navigation() {
         setIsScrolled(window.scrollY > 50);
       }
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    // Global redirect for admins on customer pages
-    if (token && user && (user.role === "ADMIN" || user.role === "STAFF") && !pathname?.startsWith("/admin")) {
+  // Admin redirect (only once user is loaded)
+  useEffect(() => {
+    if (user && (user.role === "ADMIN" || user.role === "STAFF") && !pathname?.startsWith("/admin")) {
       window.location.href = "/admin";
     }
-
-    return () => window.removeEventListener("scroll", handleScroll);
   }, [user, pathname]);
 
   if (pathname?.startsWith("/admin")) return null;
