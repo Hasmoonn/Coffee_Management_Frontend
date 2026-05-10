@@ -189,7 +189,7 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
 
             <div className="flex flex-col sm:flex-row gap-5 font-label mt-2">
               <Link 
-                href="/order" 
+                href="/menu" 
                 className="group relative flex items-center justify-center px-10 py-4 rounded-full bg-gradient-to-b from-[var(--color-secondary)] to-[#cca176] text-[#1a120b] font-bold uppercase tracking-[0.2em] text-xs shadow-[0_8px_32px_rgba(236,190,142,0.3),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_12px_66px_rgba(236,190,142,0.5),inset_0_1px_0_rgba(255,255,255,0.8)] hover:-translate-y-1 transition-all duration-300"
               >
                 Order Now

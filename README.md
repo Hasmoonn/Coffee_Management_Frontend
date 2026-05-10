@@ -38,23 +38,27 @@ Welcome to the frontend of **Brew & Co.**, a premium, cinematic web platform des
 ### Installation
 
 1.  **Clone the repository**:
+
     ```bash
     git clone <repository-url>
-    cd pro-normal/client
+    cd client
     ```
 
 2.  **Install dependencies**:
+
     ```bash
     npm install
     ```
 
 3.  **Environment Setup**:
     Create a `.env.local` file in the root of the `client` directory and add your backend URL:
+
     ```env
-    NEXT_PUBLIC_API_URL=http://localhost:5000
+    NEXT_PUBLIC_API_URL=http://localhost:PORT_NUMBER
     ```
 
 4.  **Run the development server**:
+
     ```bash
     npm run dev
     ```
@@ -82,6 +86,7 @@ src/
 ## 🎨 Design System
 
 The project follows the **"Artisanal Elegance"** design system:
+
 - **Typography**: Premium serif for headings, clean sans-serif for readability.
 - **Palette**: Deep coffee tones, rich creams, and gold accents.
 - **Feel**: Luxurious, minimalist, and responsive.
@@ -95,4 +100,5 @@ The project follows the **"Artisanal Elegance"** design system:
 5. Open a Pull Request
 
 ---
-Built with ❤️ by the Brew & Co. Team.
+
+Built with ❤️ by HASMOON.
