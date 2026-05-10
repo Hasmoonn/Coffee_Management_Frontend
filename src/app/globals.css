@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-surface-tint: var(--surface-tint);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-on-background: var(--on-background);
+  
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-label: var(--font-label);
 }
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --surface: #FDF6EC;
+    --surface-dim: #EAE0D5;
+    --surface-bright: #FFFFFF;
+    --surface-container-lowest: #FFFFFF;
+    --surface-container-low: #FDF6EC;
+    --surface-container: #F5EBE1;
+    --surface-container-high: #EAE0D5;
+    --surface-container-highest: #E0D5C9;
+    --on-surface: #2C1810;
+    --on-surface-variant: #5C4D46;
+    --inverse-surface: #1a110e;
+    --inverse-on-surface: #f2dfd9;
+    --outline: #8C7C75;
+    --outline-variant: #D9CFCB;
+    --surface-tint: #6F4E37;
+    --primary: #6F4E37;
+    --on-primary: #FFFFFF;
+    --primary-container: #E0C0B4;
+    --on-primary-container: #2D1B14;
+    --inverse-primary: #e0c0b4;
+    --secondary: #C4A882;
+    --on-secondary: #2C1810;
+    --background: #FDF6EC;
+    --on-background: #2C1810;
+  }
+
+  .dark {
+    --surface: #1a110e;
+    --surface-dim: #1a110e;
+    --surface-bright: #423733;
+    --surface-container-lowest: #150c09;
+    --surface-container-low: #231916;
+    --surface-container: #271d1a;
+    --surface-container-high: #322824;
+    --surface-container-highest: #3e322f;
+    --on-surface: #f2dfd9;
+    --on-surface-variant: #d3c3be;
+    --inverse-surface: #f2dfd9;
+    --inverse-on-surface: #392e2a;
+    --outline: #9c8e89;
+    --outline-variant: #4f4441;
+    --surface-tint: #e0c0b4;
+    --primary: #e0c0b4;
+    --on-primary: #402c24;
+    --primary-container: #2d1b14;
+    --on-primary-container: #9d8177;
+    --inverse-primary: #725950;
+    --secondary: #ecbe8e;
+    --on-secondary: #462a06;
+    --background: #1a110e;
+    --on-background: #f2dfd9;
   }
 }
 
 body {
+  background-color: var(--background);
+  color: var(--on-background);
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+.font-label {
+  font-family: var(--font-label);
+  letter-spacing: 0.05em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-bright);
+  border-radius: 6px;
+  border: 3px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-secondary);
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-surface-bright) var(--background);
 }
