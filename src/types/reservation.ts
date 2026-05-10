@@ -18,6 +18,11 @@ export interface BackendReservation {
   status: "CONFIRMED" | "CANCELLED" | "COMPLETED" | "NO_SHOW";
   occasion: string | null;
   specialRequests: string | null;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

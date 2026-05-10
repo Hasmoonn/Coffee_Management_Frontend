@@ -27,6 +27,8 @@ export interface BackendMenuItem {
   updatedAt: string;
 }
 
+export type MenuItem = BackendMenuItem;
+
 export interface PaginatedMenuResponse {
   data: BackendMenuItem[];
   pagination: {

@@ -76,7 +76,7 @@ export default function ArtisanStories() {
           initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as any }}
           className="mb-24 md:mb-32"
         >
           <div className="flex items-center gap-4 mb-6">
@@ -163,7 +163,7 @@ function StoryCard({
       transition={{
         duration: 1,
         delay: index * 0.1,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as any,
       }}
       className={`group relative flex flex-col ${
         isEven ? "md:flex-row" : "md:flex-row-reverse"
@@ -178,7 +178,7 @@ function StoryCard({
           initial={{ scale: 1.08 }}
           whileInView={{ scale: 1 }}
           whileHover={{ scale: 1.06 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as any }}
         />
 
         {/* Cinematic overlays */}

@@ -21,7 +21,7 @@ export const getImageUrl = (path: string) => {
 
 export async function apiFetch<T>(
   endpoint: string,
-  options: RequestInit & { auth?: boolean } = {}
+  options: Omit<RequestInit, "body"> & { auth?: boolean; body?: any } = {}
 ): Promise<T> {
   const { auth = false, headers = {}, ...rest } = options;
 

@@ -784,7 +784,7 @@ export default function AdminDashboard() {
             isOpen={showItemModal}
             onClose={() => setShowItemModal(false)}
             categories={categories}
-            onSubmit={async (data) => {
+            onSubmit={async (data: FormData) => {
               if (editingItem) {
                 await updateMenuItem(editingItem.id, data);
               } else {

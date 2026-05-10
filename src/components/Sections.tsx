@@ -20,7 +20,7 @@ const fadeUp = {
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] as any },
   }),
 };
 
@@ -206,7 +206,7 @@ function DrinkCard({
         initial={{ scale: 1.05 }}
         whileInView={{ scale: 1 }}
         whileHover={{ scale: 1.07 }}
-        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] as any }}
       />
 
       {/* Gradient overlays */}
@@ -286,7 +286,7 @@ function StorySection() {
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as any }}
             className="relative h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] shadow-[0_32px_80px_rgba(0,0,0,0.35)]"
           >
             <motion.div className="absolute inset-0" style={{ y: imgY }}>
@@ -337,7 +337,7 @@ function StorySection() {
             initial={{ opacity: 0, x: 60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as any, delay: 0.1 }}
           >
             <div className="flex items-center gap-4 mb-6">
               <div className="h-px w-12 bg-[var(--color-secondary)]" />
@@ -661,7 +661,7 @@ function LocationSection() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as any }}
             className="lg:col-span-3 relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] bg-[var(--color-surface-container)] shadow-2xl"
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--color-surface-container-low)]">
@@ -717,7 +717,7 @@ function LocationSection() {
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
               className="flex-1 p-8 rounded-2xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] relative overflow-hidden group hover:border-[var(--color-secondary)]/30 transition-colors duration-500"
             >
               <div className="flex items-center gap-4 mb-6">
@@ -761,7 +761,7 @@ function LocationSection() {
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] as any }}
               className="relative rounded-2xl overflow-hidden border border-[var(--color-secondary)]/20 bg-gradient-to-br from-[var(--color-secondary)]/10 to-[var(--color-secondary)]/5 p-8"
             >
               <p className="font-label text-[var(--color-secondary)] tracking-[0.2em] uppercase text-[10px] mb-3">
