@@ -27,35 +27,30 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  // Global cache to store frames for all variants
+  // Refs for high-frequency access without re-binding effects
+  const currentIndexRef = useRef(0);
+  const variantsRef = useRef(variants);
   const globalImageCache = useRef<Record<string, (HTMLImageElement | null)[]>>({});
   const preloadCalledRef = useRef(false);
   const allFramesLoadedRef = useRef<Record<string, boolean>>({});
   const rafPendingRef = useRef(false);
   const lastFrameIndexRef = useRef(-1);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { theme } = useTheme();
   const variant = variants[currentIndex];
 
-  // ── Scroll activity detection ──────────────────────────────────────────
+  // Keep refs in sync with state
   useEffect(() => {
-    const handleScrollActivity = () => {
-      if (!isScrolling) setIsScrolling(true);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => setIsScrolling(false), 1500);
-    };
-    window.addEventListener("scroll", handleScrollActivity, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScrollActivity);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    };
-  }, [isScrolling]);
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
+
+  useEffect(() => {
+    variantsRef.current = variants;
+  }, [variants]);
 
   // ── Cache canvas context once on mount ──────────────────────────────────
   useEffect(() => {
@@ -76,19 +71,9 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
     lastFrameIndexRef.current = index;
   }, []);
 
-  // ── Image preloading ─────────────────────────────────────────────────────
+  // ── Unified background preloading for ALL variants ──────────────────────
   useEffect(() => {
     let cancelled = false;
-    
-    // If we already have this variant's initial frames, we might not need to show loading
-    if (!globalImageCache.current[variant.id]) {
-      setIsLoading(true);
-      setProgress(0);
-    } else {
-      setIsLoading(false);
-      // Even if already "loaded", draw the first frame of the new variant
-      requestAnimationFrame(() => drawFrame(0, variant.id));
-    }
 
     const loadSingleImage = (v: DrinkVariant, i: number): Promise<void> =>
       new Promise<void>((resolve) => {
@@ -109,7 +94,8 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
           if (cancelled) { resolve(); return; }
           globalImageCache.current[v.id][i] = img;
           
-          if (v.id === variant.id) {
+          // Only update progress for the very first variant to show the loading screen
+          if (v.id === variants[0].id) {
             const loaded = globalImageCache.current[v.id].filter(Boolean).length;
             setProgress(Math.round((loaded / v.frameCount) * 100));
           }
@@ -130,47 +116,55 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
         };
       });
 
-    const loadAllImages = async () => {
-      // 1. Preload first frame of ALL variants immediately for instant switching
+    const loadAllVariants = async () => {
+      // 1. Preload first frame of ALL variants immediately
       await Promise.all(variants.map(v => loadSingleImage(v, 0)));
       if (cancelled) return;
 
-      // 2. Preload first 50 frames of CURRENT variant
-      const INITIAL_FRAMES = Math.min(50, variant.frameCount);
+      // 2. Preload first 50 frames of THE FIRST variant to dismiss the overlay
+      const INITIAL_FRAMES = 50;
       const PHASE1_BATCH = 15;
       
       for (let start = 1; start < INITIAL_FRAMES; start += PHASE1_BATCH) {
         if (cancelled) return;
         const end = Math.min(start + PHASE1_BATCH, INITIAL_FRAMES);
         await Promise.all(
-          Array.from({ length: end - start }, (_, k) => loadSingleImage(variant, start + k))
+          Array.from({ length: end - start }, (_, k) => loadSingleImage(variants[0], start + k))
         );
       }
 
       if (cancelled) return;
 
-      // Dismiss overlay
+      // Dismiss overlay once the first variant's start is ready
       if (!preloadCalledRef.current) {
         preloadCalledRef.current = true;
         setIsLoading(false);
         onPreloadComplete();
-        drawFrame(0, variant.id);
+        drawFrame(0, variants[0].id);
       }
 
-      // 3. Load the rest of the current variant
-      const remaining: Promise<void>[] = [];
-      for (let i = INITIAL_FRAMES; i < variant.frameCount; i++) {
-        remaining.push(loadSingleImage(variant, i));
+      // 3. Background load ALL frames for ALL variants in sequence
+      for (const v of variants) {
+        if (cancelled) break;
+        
+        // Fire all remaining frames for this variant
+        const remaining: Promise<void>[] = [];
+        for (let i = 0; i < v.frameCount; i++) {
+          if (!globalImageCache.current[v.id][i]) {
+            remaining.push(loadSingleImage(v, i));
+          }
+        }
+        await Promise.all(remaining);
+        if (!cancelled) allFramesLoadedRef.current[v.id] = true;
       }
-      await Promise.all(remaining);
-      if (!cancelled) allFramesLoadedRef.current[variant.id] = true;
     };
 
-    loadAllImages();
+    loadAllVariants();
     return () => { cancelled = true; };
-  }, [currentIndex, variant, theme, drawFrame, onPreloadComplete, variants]);
+  }, [theme, drawFrame, onPreloadComplete, variants]);
 
-  // ── RAF-throttled scroll handler ─────────────────────────────────────────
+  // ── Scroll handler (Bound once, uses Refs) ──────────────────────────────
+  // This ensures the listener is NEVER re-added during auto-cycling.
   useEffect(() => {
     const handleScroll = () => {
       if (isLoading || rafPendingRef.current) return;
@@ -178,6 +172,9 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
       rafPendingRef.current = true;
       requestAnimationFrame(() => {
         rafPendingRef.current = false;
+
+        const variant = variantsRef.current[currentIndexRef.current];
+        if (!variant) return;
 
         const scrollTop = window.scrollY;
         const maxScroll = window.innerHeight * 2;
@@ -201,7 +198,7 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
       window.removeEventListener("scroll", handleScroll);
       rafPendingRef.current = false;
     };
-  }, [isLoading, variant.frameCount, variant.id, drawFrame]);
+  }, [isLoading, drawFrame]);
 
   // ── Manual prev/next ─────────────────────────────────────────────────────
   const handlePrev = () => {
@@ -214,17 +211,23 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
     setCurrentIndex((prev) => (prev === variants.length - 1 ? 0 : prev + 1));
   };
 
-  // ── Auto-cycle — only when idle and current variant is loaded ──────────
+  // ── Continuous Auto-cycle (No scroll dependency) ────────────────────────
   useEffect(() => {
-    if (isLoading || isScrolling) return;
+    if (isLoading) return;
 
     const interval = setInterval(() => {
-      if (!allFramesLoadedRef.current[variant.id]) return;
-      setCurrentIndex((prev) => (prev === variants.length - 1 ? 0 : prev + 1));
+      // We check if the NEXT variant is ready to be shown (at least has frame 0)
+      const nextIndex = (currentIndexRef.current + 1) % variantsRef.current.length;
+      const nextVariant = variantsRef.current[nextIndex];
+      
+      // If next variant's first frame is ready, cycle the text/background
+      if (globalImageCache.current[nextVariant.id]?.[0]) {
+        setCurrentIndex(nextIndex);
+      }
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isLoading, isScrolling, variant.id, variants.length]);
+  }, [isLoading]);
 
   return (
     <section className="relative h-[300vh] w-full bg-background" id="hero">
