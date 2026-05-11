@@ -154,7 +154,7 @@ const EXPERIENCES = [
     id: "tasting",
     name: "Coffee Tasting Flight",
     desc: "Five single-origin pour overs with guided tasting notes from our roastmaster.",
-    price: "$25/person",
+    price: "Rs. 2,500/person",
     icon: Sparkles,
     popular: true,
   },
@@ -162,7 +162,7 @@ const EXPERIENCES = [
     id: "pairing",
     name: "Coffee & Pastry Pairing",
     desc: "Three curated drink-pastry pairings selected by our chef and barista.",
-    price: "$35/person",
+    price: "Rs. 3,500/person",
     icon: Heart,
     popular: false,
   },
@@ -170,7 +170,7 @@ const EXPERIENCES = [
     id: "private-tasting",
     name: "Private Roastery Tour",
     desc: "Behind-the-scenes roastery access, green bean selection, and custom roast.",
-    price: "$60/person",
+    price: "Rs. 6,000/person",
     icon: Star,
     popular: false,
   },
@@ -178,18 +178,18 @@ const EXPERIENCES = [
 
 const TESTIMONIALS = [
   {
-    text: "The tasting flight was extraordinary. Marcus walked us through each origin — it felt like traveling the world through coffee.",
-    name: "Alexandra M.",
+    text: "The tasting flight was extraordinary. Nuwan walked us through each origin — it felt like traveling the world through coffee.",
+    name: "Anushka M.",
     role: "Food Blogger",
   },
   {
     text: "We hosted our team meeting in the private room. The ambiance was perfect and the coffee kept everyone energized and inspired.",
-    name: "David K.",
+    name: "Dilshan K.",
     role: "Creative Director",
   },
   {
     text: "The window seat at golden hour is pure magic. I've made it my Sunday ritual — a book, a pour over, and that light.",
-    name: "Sophie L.",
+    name: "Sanduni L.",
     role: "Photographer",
   },
 ];
@@ -324,7 +324,7 @@ export default function ReservationPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-background)] text-[var(--color-on-background)]">
+    <main className="min-h-screen bg-[var(--color-background)] text-[var(--color-on-background)] pt-16 md:pt-0">
       <Navigation />
 
       {/* ── Hero ── */}
@@ -361,7 +361,7 @@ export default function ReservationPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="flex items-center justify-center gap-4 mb-6 mt-20"
+            className="flex items-center justify-center gap-4 mb-6 mt-16 md:mt-24"
           >
             <div className="h-px w-16 bg-[var(--color-secondary)]" />
             <span className="font-label text-[var(--color-secondary)] tracking-[0.3em] uppercase text-[10px]">
@@ -374,7 +374,7 @@ export default function ReservationPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="font-heading text-6xl md:text-8xl font-medium italic text-white leading-[0.9] tracking-tight mb-6"
+            className="font-heading text-4xl xs:text-5xl sm:text-7xl md:text-8xl font-medium italic text-white leading-[0.95] md:leading-[0.9] tracking-tight mb-6"
           >
             Reserve
             <br />
@@ -410,7 +410,7 @@ export default function ReservationPage() {
       </section>
 
       {/* ── Booking Section ── */}
-      <section className="py-20 px-6 md:px-12">
+      <section className="py-14 md:py-20 px-4 md:px-12">
         <div className="max-w-[1000px] mx-auto">
           {/* Auth banner */}
           {authChecked && !loggedIn && !createdReservation && (
@@ -446,7 +446,7 @@ export default function ReservationPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center justify-center gap-0 mb-16"
+            className="flex items-center justify-center gap-2 sm:gap-4 mb-16 overflow-x-auto pb-4 no-scrollbar"
           >
             {STEPS.map((step, i) => {
               const Icon = step.icon;
@@ -492,7 +492,7 @@ export default function ReservationPage() {
                   </div>
 
                   {i < STEPS.length - 1 && (
-                    <div className="w-12 md:w-20 h-px mx-2 relative">
+                    <div className="w-8 sm:w-12 md:w-20 h-px mx-1 sm:mx-2 relative">
                       <div className="absolute inset-0 bg-[var(--color-outline-variant)]" />
                       <motion.div
                         animate={{
@@ -702,7 +702,7 @@ function StepDateTime({
   return (
     <div>
       <div className="text-center mb-10">
-        <h2 className="font-heading text-4xl md:text-5xl italic font-medium text-[var(--color-on-background)] leading-tight mb-3">
+        <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl italic font-medium text-[var(--color-on-background)] leading-tight mb-3">
           Choose Your{" "}
           <span className="text-[var(--color-secondary)]">Date & Time</span>
         </h2>
@@ -910,7 +910,7 @@ function StepPreferences({
   return (
     <div>
       <div className="text-center mb-10">
-        <h2 className="font-heading text-4xl md:text-5xl italic font-medium text-[var(--color-on-background)] leading-tight mb-3">
+        <h2 className="font-heading text-3xl md:text-5xl italic font-medium text-[var(--color-on-background)] leading-tight mb-3">
           Craft Your{" "}
           <span className="text-[var(--color-secondary)]">Experience</span>
         </h2>
@@ -1028,7 +1028,7 @@ function StepPreferences({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {suitableTables.map((table) => {
               const selected = reservation.tableId === table.id;
               return (
@@ -1275,7 +1275,7 @@ function StepReview({
   return (
     <div>
       <div className="text-center mb-10">
-        <h2 className="font-heading text-4xl md:text-5xl italic font-medium text-[var(--color-on-background)] leading-tight mb-3">
+        <h2 className="font-heading text-3xl md:text-5xl italic font-medium text-[var(--color-on-background)] leading-tight mb-3">
           Review Your{" "}
           <span className="text-[var(--color-secondary)]">Reservation</span>
         </h2>
@@ -1642,7 +1642,7 @@ function LocationInfo() {
             {
               icon: MapPin,
               title: "Address",
-              lines: ["123 Coffee Lane", "Artisan District", "Seattle, WA 98101"],
+              lines: ["123 Galle Road", "Colombo 03", "Colombo, Sri Lanka"],
             },
             {
               icon: Clock,
@@ -1656,7 +1656,7 @@ function LocationInfo() {
             {
               icon: Phone,
               title: "Contact",
-              lines: ["+1 (555) 123-4567", "hello@brewandco.com", "@brewandco"],
+              lines: ["+94 11 234 5678", "hello@brewandco.com", "@brewandco"],
             },
           ].map((info) => {
             const Icon = info.icon;

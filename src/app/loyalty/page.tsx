@@ -4,7 +4,7 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
-  Crown, Coffee, Gift, Star, Zap, Heart, Award, ChevronRight, Check,
+  Crown, Coffee, Gift, Zap, Heart, Award, ChevronRight, Check,
   Sparkles, TrendingUp, Users, Clock, Gem, Shield, PartyPopper,
   Loader2, AlertCircle, CheckCircle2, Lock,
 } from "lucide-react";
@@ -78,7 +78,7 @@ const DEFAULT_REWARD_META: RewardUIMeta = {
 /* ─── Static data (tiers, how-it-works, stats) ─────────────────────── */
 const TIERS: Tier[] = [
   { id: "seed", name: "Seed", icon: Coffee, color: "#8B7355", minPoints: 0, maxPoints: 249,
-    perks: ["1 point per $1 spent", "Birthday free drink", "Member-only newsletter", "Early access to seasonal menus"],
+    perks: ["1 point per Rs. 100 spent", "Birthday free drink", "Member-only newsletter", "Early access to seasonal menus"],
     multiplier: "1x", badge: "🌱" },
   { id: "bloom", name: "Bloom", icon: Heart, color: "#C4A882", minPoints: 250, maxPoints: 749,
     perks: ["1.5x points on every order", "Free size upgrade on any drink", "Monthly surprise reward", "Priority seating reservations", "All Seed perks included"],
@@ -93,7 +93,7 @@ const TIERS: Tier[] = [
 
 const HOW_IT_WORKS: HowItWorksStep[] = [
   { step: 1, title: "Join for Free", desc: "Sign up in 30 seconds. No credit card. Start earning from your very first sip.", icon: Users },
-  { step: 2, title: "Earn Points", desc: "Every dollar you spend earns points. Higher tiers unlock bonus multipliers.", icon: TrendingUp },
+  { step: 2, title: "Earn Points", desc: "Every rupee you spend earns points. Higher tiers unlock bonus multipliers.", icon: TrendingUp },
   { step: 3, title: "Unlock Rewards", desc: "Redeem your points for free drinks, exclusive experiences, and curated merchandise.", icon: Gift },
   { step: 4, title: "Rise Through Tiers", desc: "The more you brew with us, the more exclusive your benefits become.", icon: Crown },
 ];
@@ -250,7 +250,7 @@ export default function LoyaltyPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="flex items-center justify-center gap-4 mb-6 mt-20"
+            className="flex items-center justify-center gap-4 mb-6 mt-26"
           >
             <div className="h-px w-16 bg-[var(--color-secondary)]" />
             <span className="font-label text-[var(--color-secondary)] tracking-[0.3em] uppercase text-[10px]">
@@ -263,7 +263,7 @@ export default function LoyaltyPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="font-heading text-6xl md:text-7xl font-medium italic text-white leading-[0.9] tracking-tight mb-6"
+            className="font-heading text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-medium italic text-white leading-[0.95] md:leading-[0.9] tracking-tight mb-6"
           >
             Every Sip
             <br />
@@ -340,8 +340,8 @@ export default function LoyaltyPage() {
       )}
 
       {/* ── Stats ── */}
-      <section className="py-12 px-6 md:px-12 border-b border-[var(--color-outline-variant)]">
-        <div className="max-w-[1300px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="py-10 md:py-16 px-6 md:px-12 border-b border-[var(--color-outline-variant)]">
+        <div className="max-w-[1300px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -444,7 +444,7 @@ function MemberStatusBanner({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-[var(--color-secondary)]/30 bg-[var(--color-surface-container-low)] p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="rounded-2xl border border-[var(--color-secondary)]/30 bg-[var(--color-surface-container-low)] p-5 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {/* Tier */}
           <div className="flex items-center gap-4">
@@ -496,7 +496,7 @@ function MemberStatusBanner({
                 {stamps}/{stampGoal}
               </p>
             </div>
-            <div className="grid grid-cols-9 gap-1 mb-3">
+            <div className="grid grid-cols-5 xs:grid-cols-9 gap-1 mb-3">
               {[...Array(stampGoal)].map((_, i) => (
                 <div
                   key={i}
@@ -531,7 +531,7 @@ function MemberStatusBanner({
 /* ─── How It Works (unchanged) ─────────────────────────────────────── */
 function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-28 md:py-36 px-6 md:px-12">
+    <section id="how-it-works" className="py-20 md:py-36 px-4 md:px-12">
       <div className="max-w-[1300px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -547,12 +547,12 @@ function HowItWorksSection() {
             </span>
             <div className="h-px w-10 bg-[var(--color-secondary)]" />
           </div>
-          <h2 className="font-heading text-5xl md:text-6xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
             How It<br /><span className="text-[var(--color-secondary)]">Works</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {HOW_IT_WORKS.map((step, i) => {
             const Icon = step.icon;
             return (
@@ -583,8 +583,8 @@ function HowItWorksSection() {
                     <div className="w-14 h-14 rounded-2xl bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 flex items-center justify-center mx-auto mb-5 group-hover:bg-[var(--color-secondary)]/20 transition-colors duration-500">
                       <Icon size={24} className="text-[var(--color-secondary)]" />
                     </div>
-                    <h3 className="font-heading italic text-xl text-[var(--color-on-surface)] mb-3">{step.title}</h3>
-                    <p className="font-body text-[var(--color-on-surface-variant)] text-sm leading-relaxed">{step.desc}</p>
+                    <h3 className="font-heading italic text-lg sm:text-xl text-[var(--color-on-surface)] mb-2 sm:mb-3">{step.title}</h3>
+                    <p className="font-body text-[var(--color-on-surface-variant)] text-xs sm:text-sm leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -610,7 +610,7 @@ function TierSection({
   const usersTier = userPoints !== null ? getCurrentTier(userPoints) : null;
 
   return (
-    <section className="py-28 md:py-36 px-6 md:px-12 bg-[var(--color-surface-container-lowest)] border-y border-[var(--color-outline-variant)]">
+    <section className="py-20 md:py-36 px-4 md:px-12 bg-[var(--color-surface-container-lowest)] border-y border-[var(--color-outline-variant)]">
       <div className="max-w-[1300px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -626,7 +626,7 @@ function TierSection({
                 Tier System
               </span>
             </div>
-            <h2 className="font-heading text-5xl md:text-6xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
               Rise Through<br /><span className="text-[var(--color-secondary)]">the Ranks</span>
             </h2>
           </div>
@@ -635,7 +635,7 @@ function TierSection({
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 mb-10">
           {TIERS.map((tier, i) => {
             const isActive = activeTier === tier.id;
             const isUserTier = usersTier?.id === tier.id;
@@ -933,8 +933,8 @@ function RewardCard({
 
         <div className="absolute top-3 left-3 flex gap-2">
           {meta.popular && (
-            <span className="px-2.5 py-1 rounded-full bg-[var(--color-secondary)]/20 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] font-label text-[8px] tracking-[0.2em] uppercase backdrop-blur-sm flex items-center gap-1">
-              <Star size={8} className="fill-current" />
+            <span className="px-2.5 py-1 rounded-full bg-[var(--color-secondary)]/20 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] font-label text-[8px] tracking-[0.2em] uppercase backdrop-blur-md flex items-center gap-1">
+              <Sparkles size={8} className="fill-current" />
               Popular
             </span>
           )}
@@ -956,14 +956,14 @@ function RewardCard({
         </div>
       </div>
 
-      <div className="p-5">
-        <p className="font-label text-[var(--color-secondary)] text-[9px] tracking-[0.25em] uppercase mb-1.5">
+      <div className="p-4 xs:p-5">
+        <p className="font-label text-[var(--color-secondary)] text-[8px] xs:text-[9px] tracking-[0.25em] uppercase mb-1.5">
           {meta.category}
         </p>
-        <h3 className="font-heading italic text-lg text-[var(--color-on-surface)] leading-tight mb-2">
+        <h3 className="font-heading italic text-base xs:text-lg text-[var(--color-on-surface)] leading-tight mb-2">
           {reward.name}
         </h3>
-        <p className="font-body text-[var(--color-on-surface-variant)] text-sm leading-relaxed mb-5">
+        <p className="font-body text-[var(--color-on-surface-variant)] text-xs xs:text-sm leading-relaxed mb-4 xs:mb-5">
           {reward.description}
         </p>
 
@@ -1110,7 +1110,7 @@ function CtaSection({ loggedIn }: { loggedIn: boolean }) {
           <div className="h-px w-12 bg-[var(--color-secondary)]" />
         </div>
 
-        <h2 className="font-heading text-5xl md:text-7xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-6">
+        <h2 className="font-heading text-4xl xs:text-5xl md:text-7xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-6">
           {loggedIn ? (
             <>Order More.<br /><span className="text-[var(--color-secondary)]">Earn More.</span></>
           ) : (

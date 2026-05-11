@@ -65,7 +65,7 @@ export default function Dashboard() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading italic text-4xl md:text-5xl lg:text-6xl text-[var(--color-on-surface)]"
+            className="font-heading italic text-3xl xs:text-4xl sm:text-5xl lg:text-6xl text-[var(--color-on-surface)]"
           >
             Welcome back, <br/>
             <span className="text-[var(--color-secondary)]">{user?.name || "Artisan"}</span>
@@ -88,7 +88,7 @@ export default function Dashboard() {
             transition={{ delay: 0.2 }}
             className="w-full lg:w-1/4"
           >
-            <div className="flex flex-col gap-2 sticky top-32">
+            <div className="flex flex-row lg:flex-col gap-2 sticky top-32 overflow-x-auto pb-4 lg:pb-0 lg:overflow-visible scrollbar-hide">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -96,14 +96,14 @@ export default function Dashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 text-left ${
+                    className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 text-left whitespace-nowrap lg:whitespace-normal flex-shrink-0 lg:flex-shrink ${
                       isActive 
                         ? "bg-[var(--color-secondary)] text-[#1a120b] shadow-[0_8px_30px_rgba(196,168,130,0.2)]" 
                         : "hover:bg-[var(--color-surface-container)] text-[var(--color-on-surface)]"
                     }`}
                   >
                     <Icon size={20} className={isActive ? "text-[#1a120b]" : "text-[var(--color-secondary)]"} />
-                    <span className="font-label text-xs font-bold tracking-[0.15em] uppercase">
+                    <span className="font-label text-[10px] sm:text-xs font-bold tracking-[0.15em] uppercase">
                       {tab.label}
                     </span>
                   </button>
@@ -112,10 +112,10 @@ export default function Dashboard() {
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-4 px-6 py-4 mt-8 rounded-2xl hover:bg-red-500/10 text-red-400 transition-all duration-300 text-left border border-transparent hover:border-red-500/20"
+                className="flex items-center gap-4 px-6 py-4 lg:mt-8 rounded-2xl hover:bg-red-500/10 text-red-400 transition-all duration-300 text-left border border-transparent hover:border-red-500/20 whitespace-nowrap flex-shrink-0"
               >
                 <LogOut size={20} />
-                <span className="font-label text-xs font-bold tracking-[0.15em] uppercase">
+                <span className="font-label text-[10px] sm:text-xs font-bold tracking-[0.15em] uppercase">
                   Sign Out
                 </span>
               </button>
@@ -219,7 +219,7 @@ export default function Dashboard() {
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-heading text-xl text-[var(--color-on-surface)]">${order.finalAmount.toFixed(2)}</p>
+                              <p className="font-heading text-xl text-[var(--color-on-surface)]">Rs. {order.finalAmount.toFixed(2)}</p>
                               <p className="text-xs text-[var(--color-on-surface-variant)] uppercase tracking-wider">{order.orderType.replace('_', ' ')}</p>
                             </div>
                           </div>
@@ -317,7 +317,7 @@ export default function Dashboard() {
                           {loyaltyLoading ? "..." : loyaltyData?.points || 0}
                         </h3>
                         <p className="text-sm text-[var(--color-on-surface-variant)]">
-                          Earn 1 point for every $1 spent.
+                          Earn 1 point for every Rs. 100 spent.
                         </p>
                       </div>
                     </div>

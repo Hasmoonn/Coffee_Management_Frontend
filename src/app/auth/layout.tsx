@@ -66,7 +66,7 @@ function CoffeeBean({ style, duration, delay }: { style: React.CSSProperties; du
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-screen overflow-hidden flex bg-[var(--color-background)]">
+    <div className="min-h-[100dvh] flex flex-col lg:flex-row bg-[var(--color-background)]">
       {/* === LEFT CINEMATIC PANEL === */}
       <div className="hidden lg:flex lg:w-[52%] h-full relative overflow-hidden bg-[#0e0906] flex-col items-center justify-center">
         {/* Deep gradient layers */}
@@ -241,7 +241,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* === RIGHT FORM PANEL === */}
-      <div className="w-full lg:w-[48%] h-full flex flex-col overflow-y-auto">
+      <div className="w-full lg:w-[48%] min-h-[100dvh] flex flex-col">
         {/* Mobile brand header */}
         <div className="lg:hidden flex-shrink-0 flex items-center justify-between px-6 py-5 border-b border-[var(--color-outline-variant)]">
           <Link href="/" className="font-heading italic text-2xl text-[var(--color-secondary)]">
@@ -252,13 +252,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </Link>
         </div>
 
-        {/* Form content — centered, scrollable internally */}
-        <div className="flex-1 flex items-center justify-center px-6 py-8 md:px-16 min-h-0">
+        {/* Form content — centered */}
+        <div className="flex-1 flex items-center justify-center px-6 py-12 md:px-16">
           {children}
         </div>
 
         {/* Footer note */}
-        <div className="flex-shrink-0 px-6 py-4 text-center lg:hidden">
+        <div className="flex-shrink-0 px-6 py-8 text-center lg:hidden">
           <p suppressHydrationWarning className="text-[var(--color-on-surface-variant)] font-label text-xs tracking-wider opacity-60">
             &copy; {new Date().getFullYear()} Brew &amp; Co. All rights reserved.
           </p>

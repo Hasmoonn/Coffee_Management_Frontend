@@ -10,7 +10,6 @@ import {
 } from "framer-motion";
 import {
   Coffee,
-  Star,
   Plus,
   Minus,
   ShoppingBag,
@@ -187,7 +186,7 @@ export default function MenuPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="font-heading text-6xl md:text-8xl font-medium italic text-white leading-[0.9] tracking-tight mb-6"
+            className="font-heading text-4xl xs:text-5xl sm:text-7xl md:text-8xl font-medium italic text-white leading-[0.95] md:leading-[0.9] tracking-tight mb-6"
           >
             Our
             <br />
@@ -222,9 +221,9 @@ export default function MenuPage() {
       </section>
 
       {/* ── Sticky Category Nav ── */}
-      <section className="sticky top-20 z-40 py-4 px-6 md:px-12 bg-[var(--color-background)]/85 backdrop-blur-2xl border-b border-[var(--color-outline-variant)]/40">
-        <div className="max-w-[1300px] mx-auto flex items-center justify-between gap-6">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+      <section className="sticky top-20 z-40 py-3 md:py-4 px-4 md:px-12 bg-[var(--color-background)]/85 backdrop-blur-2xl border-b border-[var(--color-outline-variant)]/40">
+        <div className="max-w-[1300px] mx-auto flex items-center justify-between gap-3 md:gap-6">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 flex-grow">
             {/* "All" pill — always first */}
             <motion.button
               onClick={() => setActiveSlug(ALL_SLUG)}
@@ -352,7 +351,7 @@ export default function MenuPage() {
                         : `${displayedItems.length} ${displayedItems.length === 1 ? "item" : "items"}`}
                     </span>
                   </div>
-                  <h2 className="font-heading text-4xl md:text-5xl italic font-medium text-white leading-tight mb-2">
+                  <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl italic font-medium text-white leading-tight mb-2">
                     {isAllView
                       ? "All Items"
                       : activeCategory?.name ?? categoryData?.category?.name}
@@ -370,8 +369,8 @@ export default function MenuPage() {
           </div>
 
           {/* Items grid */}
-          <div className="px-6 md:px-12 py-14 max-w-[1300px] mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="px-4 md:px-12 py-10 md:py-14 max-w-[1300px] mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
               {itemsLoading ? (
                 [...Array(6)].map((_, i) => <CardSkeleton key={i} />)
               ) : itemsError ? (
@@ -486,7 +485,7 @@ function MenuItemCard({
           )}
           {item.isFeatured && (
             <span className="px-2.5 py-1 rounded-full bg-[var(--color-secondary)]/20 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] font-label text-[8px] tracking-[0.2em] uppercase backdrop-blur-sm flex items-center gap-1">
-              <Star size={8} className="fill-current" />
+              <Coffee size={10} className="fill-current" />
               Featured
             </span>
           )}
@@ -514,7 +513,7 @@ function MenuItemCard({
             </p>
           </div>
           <span className="font-heading text-2xl font-medium text-[var(--color-secondary)] flex-shrink-0">
-            ${item.price.toFixed(2)}
+            Rs. {item.price.toFixed(2)}
           </span>
         </div>
 
@@ -611,129 +610,145 @@ function ItemDetailModal({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.92, opacity: 0, y: 20 }}
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/10 bg-[var(--color-surface-container)] shadow-[0_40px_100px_rgba(0,0,0,0.6)]"
+        className="relative w-[95%] md:w-full max-w-5xl max-h-[90vh] md:max-h-[85vh] overflow-hidden rounded-[32px] md:rounded-[40px] border border-white/10 bg-black/40 backdrop-blur-3xl shadow-[0_40px_120px_rgba(0,0,0,0.8)] flex flex-col md:flex-row"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl">
-          <img
+        {/* Image Section */}
+        <div className="relative w-full md:w-[45%] h-72 md:h-auto overflow-hidden shrink-0">
+          <motion.img
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
             src={getImageUrl(item.imageUrl || FALLBACK_IMAGE)}
             alt={item.name}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface-container)] via-black/20 to-transparent" />
-
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full border border-white/10 bg-black/50 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-black/70 transition-all"
-          >
-            <X size={18} />
-          </button>
-
-          <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap">
+          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 via-transparent to-transparent md:from-black/20" />
+          
+          <div className="absolute bottom-6 left-6 flex gap-2 flex-wrap">
             {item.isFeatured && (
-              <span className="px-3 py-1.5 rounded-full bg-[var(--color-secondary)]/20 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] font-label text-[9px] tracking-[0.2em] uppercase backdrop-blur-sm">
-                Featured
+              <span className="px-3 py-1.5 rounded-full bg-[var(--color-secondary)]/20 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] font-label text-[8px] tracking-[0.2em] uppercase backdrop-blur-md">
+                Signature
               </span>
             )}
             {item.isSeasonal && (
-              <span className="px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 font-label text-[9px] tracking-[0.2em] uppercase backdrop-blur-sm">
+              <span className="px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-label text-[8px] tracking-[0.2em] uppercase backdrop-blur-md">
                 Seasonal
               </span>
             )}
           </div>
+
+          <button
+            onClick={onClose}
+            className="md:hidden absolute top-4 right-4 w-10 h-10 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl flex items-center justify-center text-white/70 hover:text-white transition-all"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        <div className="p-8 md:p-10">
-          <div className="flex items-start justify-between gap-4 mb-5">
-            <div>
-              <h2 className="font-heading text-3xl md:text-4xl italic font-medium text-[var(--color-on-surface)] leading-tight">
-                {item.name}
-              </h2>
-              <p className="font-label text-[var(--color-secondary)] text-xs tracking-[0.2em] uppercase mt-2">
+        {/* Content Section */}
+        <div className="flex-1 overflow-y-auto p-8 md:p-12 scrollbar-hide relative">
+          <button
+            onClick={onClose}
+            className="hidden md:flex absolute top-8 right-8 w-12 h-12 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all"
+          >
+            <X size={20} />
+          </button>
+
+          <div className="max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+            >
+              <p className="font-label text-[var(--color-secondary)] text-[10px] tracking-[0.4em] uppercase mb-4 opacity-70">
                 {categoryName}
               </p>
-            </div>
-            <span className="font-heading text-4xl font-medium text-[var(--color-secondary)] flex-shrink-0">
-              ${item.price.toFixed(2)}
-            </span>
-          </div>
+              <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl italic font-medium text-white leading-[0.95] tracking-tight mb-6">
+                {item.name}
+              </h2>
+            </motion.div>
 
-          <div className="h-px w-full bg-[var(--color-outline-variant)] mb-6" />
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="flex items-center gap-6 mb-8"
+            >
+              <span className="font-heading text-3xl md:text-4xl font-medium text-[var(--color-secondary)]">
+                Rs. {item.price.toFixed(2)}
+              </span>
+            </motion.div>
 
-          <p className="font-body text-[var(--color-on-surface-variant)] leading-relaxed mb-8">
-            {item.description}
-          </p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              <p className="font-body text-white/60 text-base md:text-lg leading-relaxed mb-10">
+                {item.description}
+              </p>
+            </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {item.calories != null && (
-              <div className="p-4 rounded-xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]">
-                <p className="font-label text-[var(--color-on-surface-variant)] text-[9px] tracking-wider uppercase mb-1">
-                  Calories
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
+              {item.calories != null && (
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
+                  <p className="font-label text-white/40 text-[8px] tracking-widest uppercase mb-1">
+                    Energy
+                  </p>
+                  <p className="font-body text-white text-xs font-semibold">
+                    {item.calories} cal
+                  </p>
+                </div>
+              )}
+              <div className="p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
+                <p className="font-label text-white/40 text-[8px] tracking-widest uppercase mb-1">
+                  Crafting
                 </p>
-                <p className="font-body text-[var(--color-on-surface)] text-sm font-medium">
-                  {item.calories} cal
+                <p className="font-body text-white text-xs font-semibold">
+                  ~{item.preparationTime} min
                 </p>
               </div>
-            )}
-            <div className="p-4 rounded-xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]">
-              <p className="font-label text-[var(--color-on-surface-variant)] text-[9px] tracking-wider uppercase mb-1">
-                Prep Time
-              </p>
-              <p className="font-body text-[var(--color-on-surface)] text-sm font-medium">
-                ~{item.preparationTime} min
-              </p>
-            </div>
-            <div className="p-4 rounded-xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]">
-              <p className="font-label text-[var(--color-on-surface-variant)] text-[9px] tracking-wider uppercase mb-1">
-                Strength
-              </p>
-              <div className="flex gap-1 mt-1.5">
-                {[1, 2, 3, 4, 5].map((level) => (
-                  <div
-                    key={level}
-                    className={`w-4 h-2 rounded-full ${
-                      level <= intensity
-                        ? "bg-[var(--color-secondary)]"
-                        : "bg-[var(--color-outline-variant)]"
-                    }`}
-                  />
-                ))}
+              <div className="p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
+                <p className="font-label text-white/40 text-[8px] tracking-widest uppercase mb-1">
+                  Intensity
+                </p>
+                <div className="flex gap-1 mt-1.5">
+                  {[1, 2, 3, 4, 5].map((level) => (
+                    <div
+                      key={level}
+                      className={`w-3 h-1 rounded-full ${
+                        level <= intensity ? "bg-[var(--color-secondary)]" : "bg-white/10"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
+                <p className="font-label text-white/40 text-[8px] tracking-widest uppercase mb-1">
+                  Status
+                </p>
+                <p className={`font-body text-xs font-semibold ${item.isAvailable ? "text-emerald-400" : "text-red-400"}`}>
+                  {item.isAvailable ? "Ready" : "Unavailable"}
+                </p>
               </div>
             </div>
-            <div className="p-4 rounded-xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]">
-              <p className="font-label text-[var(--color-on-surface-variant)] text-[9px] tracking-wider uppercase mb-1">
-                Status
-              </p>
-              <p
-                className={`font-body text-sm font-medium ${
-                  item.isAvailable ? "text-emerald-400" : "text-red-400"
-                }`}
-              >
-                {item.isAvailable ? "Available" : "Unavailable"}
-              </p>
-            </div>
-          </div>
 
-          <motion.button
-            onClick={onAdd}
-            disabled={!item.isAvailable}
-            whileHover={
-              item.isAvailable
-                ? { scale: 1.02, boxShadow: "0 12px 32px rgba(196,168,130,0.35)" }
-                : {}
-            }
-            whileTap={item.isAvailable ? { scale: 0.97 } : {}}
-            className={`w-full py-4 rounded-full font-label font-bold uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-3 ${
-              item.isAvailable
-                ? "bg-[var(--color-secondary)] text-[#1a120b] hover:brightness-105"
-                : "bg-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] cursor-not-allowed"
-            }`}
-          >
-            <Plus size={14} />
-            {item.isAvailable
-              ? `Add to Cart — $${item.price.toFixed(2)}`
-              : "Currently Unavailable"}
-          </motion.button>
+            <motion.button
+              onClick={onAdd}
+              disabled={!item.isAvailable}
+              whileHover={item.isAvailable ? { scale: 1.02, y: -2 } : {}}
+              whileTap={item.isAvailable ? { scale: 0.98 } : {}}
+              className={`w-full py-5 rounded-full font-label font-bold uppercase tracking-[0.3em] text-[10px] transition-all flex items-center justify-center gap-4 ${
+                item.isAvailable
+                  ? "bg-[var(--color-secondary)] text-[#1a120b] shadow-[0_20px_40px_rgba(196,168,130,0.25)]"
+                  : "bg-white/5 text-white/20 cursor-not-allowed border border-white/5"
+              }`}
+            >
+              <Plus size={16} strokeWidth={3} />
+              {item.isAvailable ? `Add to Order — Rs. ${item.price.toFixed(2)}` : "Unavailable"}
+            </motion.button>
+          </div>
         </div>
       </motion.div>
     </motion.div>
@@ -831,7 +846,7 @@ function CartDrawer({
                     {item.name}
                   </h4>
                   <p className="font-label text-[var(--color-secondary)] text-xs mt-0.5">
-                    ${item.price.toFixed(2)} each
+                    Rs. {item.price.toFixed(2)} each
                   </p>
                 </div>
 
@@ -854,7 +869,7 @@ function CartDrawer({
                 </div>
 
                 <span className="font-heading text-base font-medium text-[var(--color-on-surface)] w-14 text-right flex-shrink-0">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  Rs. {(item.price * item.quantity).toFixed(2)}
                 </span>
               </motion.div>
             ))
@@ -868,7 +883,7 @@ function CartDrawer({
                 Total
               </span>
               <span className="font-heading text-3xl font-medium text-[var(--color-secondary)]">
-                ${total.toFixed(2)}
+                Rs. {total.toFixed(2)}
               </span>
             </div>
 
@@ -937,7 +952,7 @@ function PairingSection() {
             </span>
             <div className="h-px w-10 bg-[var(--color-secondary)]" />
           </div>
-          <h2 className="font-heading text-5xl md:text-6xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
+          <h2 className="font-heading text-4xl md:text-6xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
             Perfect
             <br />
             <span className="text-[var(--color-secondary)]">Pairings</span>
@@ -978,14 +993,7 @@ function PairingSection() {
                   &ldquo;{pair.note}&rdquo;
                 </p>
                 <div className="flex items-center gap-1 mt-4">
-                  {[...Array(5)].map((_, j) => (
-                    <Star
-                      key={j}
-                      size={10}
-                      className="fill-[var(--color-secondary)] text-[var(--color-secondary)]"
-                    />
-                  ))}
-                  <span className="font-label text-[var(--color-on-surface-variant)] text-[9px] tracking-wider uppercase ml-2">
+                  <span className="font-label text-[var(--color-secondary)] text-[10px] tracking-[0.2em] uppercase">
                     Staff Pick
                   </span>
                 </div>
@@ -1027,7 +1035,7 @@ function BottomCta() {
           <div className="h-px w-12 bg-[var(--color-secondary)]" />
         </div>
 
-        <h2 className="font-heading text-5xl md:text-7xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-6">
+        <h2 className="font-heading text-4xl xs:text-5xl md:text-7xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-6">
           Skip the Line,
           <br />
           <span className="text-[var(--color-secondary)]">Order Ahead</span>

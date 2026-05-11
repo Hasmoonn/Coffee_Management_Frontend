@@ -58,21 +58,21 @@ const FEATURES = [
 
 const TESTIMONIALS = [
   {
-    name: "Sarah L.",
+    name: "Shalini L.",
     role: "Architect",
     text: "The Velvet Espresso is transcendent. I've been to cafés across three continents — this one holds its own.",
     rating: 5,
     avatar: "SL",
   },
   {
-    name: "James D.",
+    name: "Jayantha D.",
     role: "Writer",
     text: "Best pour over in the city, full stop. You taste the care in every sip. My creative ritual starts here.",
     rating: 5,
     avatar: "JD",
   },
   {
-    name: "Emily R.",
+    name: "Eshani R.",
     role: "Photographer",
     text: "The atmosphere is as beautiful as the coffee. I've shot three editorial spreads in this space.",
     rating: 5,
@@ -101,7 +101,7 @@ function MenuSection() {
   return (
     <section
       id="menu"
-      className="relative py-32 md:py-40 px-6 md:px-12 overflow-hidden"
+      className="relative py-20 md:py-40 px-6 md:px-12 overflow-hidden"
     >
       {/* Background texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-surface-container-lowest)] to-[var(--color-background)] pointer-events-none" />
@@ -121,7 +121,7 @@ function MenuSection() {
                 Signature Collection
               </span>
             </div>
-            <h2 className="font-heading text-6xl md:text-7xl font-medium text-[var(--color-on-background)] leading-[0.9] tracking-tight">
+            <h2 className="font-heading text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-medium text-[var(--color-on-background)] leading-[0.95] md:leading-[0.9] tracking-tight">
               Featured
               <br />
               <em className="italic text-[var(--color-secondary)]">Signature</em>
@@ -268,7 +268,7 @@ function DrinkCard({
           {item.isFeatured ? "Featured" : style.tag}
         </span>
         <span className="font-heading text-2xl font-medium text-white drop-shadow-lg">
-          ${item.price.toFixed(2)}
+          Rs. {item.price.toFixed(2)}
         </span>
       </div>
 
@@ -319,7 +319,7 @@ function StorySection() {
     <section
       id="story"
       ref={ref}
-      className="relative py-32 md:py-40 overflow-hidden bg-[var(--color-surface-container-lowest)]"
+      className="relative py-20 md:py-40 overflow-hidden bg-[var(--color-surface-container-lowest)]"
     >
       {/* Ambient glow */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[var(--color-secondary)]/5 blur-[120px]" />
@@ -332,7 +332,7 @@ function StorySection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as any }}
-            className="relative h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] shadow-[0_32px_80px_rgba(0,0,0,0.35)]"
+            className="relative h-[400px] xs:h-[500px] lg:h-[700px] rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] shadow-[0_32px_80px_rgba(0,0,0,0.35)]"
           >
             <motion.div className="absolute inset-0" style={{ y: imgY }}>
               <img
@@ -391,7 +391,7 @@ function StorySection() {
               </span>
             </div>
 
-            <h2 className="font-heading text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-8">
+            <h2 className="font-heading text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-8">
               A Passion for
               <br />
               <em className="italic text-[var(--color-secondary)]">
@@ -457,7 +457,7 @@ function StorySection() {
 /* ─── Features Section ──────────────────────────────────────────────── */
 function FeaturesSection() {
   return (
-    <section className="relative py-32 md:py-40 px-6 md:px-12 overflow-hidden">
+    <section className="relative py-20 md:py-40 px-6 md:px-12 overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
         {/* Header */}
         <motion.div
@@ -474,7 +474,7 @@ function FeaturesSection() {
               </span>
               <div className="h-px w-8 bg-[var(--color-secondary)]" />
             </div>
-            <h2 className="font-heading text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
+            <h2 className="font-heading text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
               The Brew & Co.
               <br />
               <em className="italic text-[var(--color-secondary)]">
@@ -549,7 +549,7 @@ function FeaturesSection() {
 /* ─── Testimonials Section ──────────────────────────────────────────── */
 function TestimonialsSection() {
   return (
-    <section className="relative py-32 md:py-40 overflow-hidden bg-[var(--color-surface-container-lowest)]">
+    <section className="relative py-20 md:py-40 overflow-hidden bg-[var(--color-surface-container-lowest)]">
       {/* Decorative lines */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(5)].map((_, i) => (
@@ -575,7 +575,7 @@ function TestimonialsSection() {
                 Community Voices
               </span>
             </div>
-            <h2 className="font-heading text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
+            <h2 className="font-heading text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
               What Our
               <br />
               <em className="italic text-[var(--color-secondary)]">
@@ -671,7 +671,7 @@ function LocationSection() {
   return (
     <section
       id="contact"
-      className="relative py-32 md:py-40 px-6 md:px-12 overflow-hidden"
+      className="relative py-20 md:py-40 px-6 md:px-12 overflow-hidden"
     >
       {/* Ambient glow */}
       <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full" />
@@ -692,7 +692,7 @@ function LocationSection() {
               </span>
               <div className="h-px w-8 bg-[var(--color-secondary)]" />
             </div>
-            <h2 className="font-heading text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
+            <h2 className="font-heading text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight">
               Come Visit
               <br />
               <em className="italic text-[var(--color-secondary)]">Our Space</em>
@@ -741,10 +741,12 @@ function LocationSection() {
                 />
               </motion.div>
               <p className="font-heading italic text-[var(--color-on-surface)] text-xl">
-                Artisan District, Seattle
+                Artisan District, Colombo
               </p>
               <p className="font-label text-[var(--color-on-surface-variant)] text-xs tracking-widest uppercase">
-                123 Coffee Lane, WA 98101
+                123 Galle Road, Colombo 03
+                <br />
+                +94 11 234 5678
               </p>
               <Link
                 href="#contact"

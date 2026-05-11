@@ -30,7 +30,7 @@ const STORIES = [
     label: "Signature Pour",
     title: "Honey Lavender Latte",
     subtitle: "Seasonal Masterpiece",
-    desc: "Raw local honey from Cascade mountain hives, organic Provence lavender, and our signature double ristretto — crafted for those who seek something transcendent.",
+    desc: "Raw local honey from Knuckles mountain range, organic Provence lavender, and our signature double ristretto — crafted for those who seek something transcendent.",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDwzKEsOOIdBlNc0CHcb3PF4zd8DbNPnTr-udy7wy8hBGIzxRVpbDipSt0wYlXTeq4qXC5Ls3la5haMVfos6JZGmkUBshcpBgVdvd3FtHs5uCm4s3Uq7T7I3RvcFDYqdqTH6bXMFw3wzhgEt38kduTMHnE3gAEtS5uZMXMM84CXlvCMfIWpDKUGFoozwfJvOLOLsaUo1-oLGi0ff3zMc0zSM1_swH3d-H06bsNcPkoMpKJW3DZFRPDQpJpZKYWR4SiNTSt1sXbXyNJ4",
     tag: "Limited Edition",
     accent: "from-purple-900/60",
@@ -92,7 +92,7 @@ export default function ArtisanStories() {
             </span>
           </div>
 
-          <h2 className="font-heading text-6xl md:text-8xl font-medium text-[var(--color-on-background)] leading-[0.9] tracking-tight mb-6">
+          <h2 className="font-heading text-4xl xs:text-5xl sm:text-7xl md:text-8xl font-medium text-[var(--color-on-background)] leading-[0.95] md:leading-[0.9] tracking-tight mb-6">
             Stories
             <br />
             <em className="text-[var(--color-secondary)] italic">Behind</em>
@@ -100,7 +100,7 @@ export default function ArtisanStories() {
             the Cup
           </h2>
 
-          <p className="font-body text-[var(--color-on-surface-variant)] text-lg max-w-md leading-relaxed mt-8 ml-0 md:ml-auto md:text-right">
+          <p className="font-body text-[var(--color-on-surface-variant)] text-base sm:text-lg max-w-md leading-relaxed mt-8 ml-0 md:ml-auto md:text-right">
             Every sip is the culmination of a thousand decisions — from altitude
             to extraction time. We obsess so you can simply enjoy.
           </p>
@@ -186,7 +186,7 @@ function StoryCard({
           className={`absolute inset-0 bg-gradient-to-t ${story.accent} to-transparent opacity-60`}
         />
         <div
-          className={`absolute inset-0 bg-gradient-to-${isEven ? "r" : "l"} from-transparent to-[var(--color-surface-container-low)]/90`}
+          className={`absolute inset-0 bg-gradient-to-t md:bg-gradient-to-${isEven ? "r" : "l"} from-transparent to-[var(--color-surface-container-low)]/90`}
         />
 
         {/* Frame number */}

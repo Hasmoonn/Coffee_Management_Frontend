@@ -231,7 +231,7 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
 
   return (
     <section className="relative h-[300vh] w-full bg-background" id="hero">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
         {/* Canvas — sized in CSS, logical resolution kept at 1920×1080 */}
         <canvas
           ref={canvasRef}
@@ -243,11 +243,11 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
         <div className="absolute inset-0 bg-black/30 dark:bg-black/50 z-10" />
 
         {/* Left Content */}
-        <div className="absolute left-0 top-0 h-full w-full md:w-1/2 flex flex-col justify-center px-8 md:px-24 z-20 pointer-events-none">
-          <div className="pointer-events-auto max-w-xl">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-[2px] bg-[var(--color-secondary)]" />
-              <h2 className="text-[var(--color-secondary)] font-label uppercase tracking-[0.2em] text-sm font-semibold drop-shadow-md">
+        <div className="absolute left-0 top-8 h-full w-full lg:w-1/2 flex flex-col justify-center px-6 md:px-16 lg:px-24 z-20 pointer-events-none pt-24 lg:pt-0">
+          <div className="pointer-events-auto max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
+            <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
+              <div className="w-8 md:w-12 h-[2px] bg-[var(--color-secondary)]" />
+              <h2 className="text-[var(--color-secondary)] font-label uppercase tracking-[0.2em] text-xs md:text-sm font-semibold drop-shadow-md">
                 {tagline}
               </h2>
             </div>
@@ -260,28 +260,28 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
               >
-                <h1 className="text-4xl md:text-6xl font-heading font-semibold text-white mb-4 leading-tight drop-shadow-lg tracking-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-semibold text-white mb-4 leading-tight drop-shadow-lg tracking-tight">
                   {variant.name}
                 </h1>
-                <h3 className="text-xl md:text-2xl text-[var(--color-secondary)] mb-6 font-heading italic font-medium drop-shadow-md">
+                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl text-[var(--color-secondary)] mb-6 font-heading italic font-medium drop-shadow-md">
                   {variant.subtitle}
                 </h3>
-                <p className="text-white/80 text-base md:text-lg mb-10 leading-relaxed font-body max-w-lg drop-shadow-md">
+                <p className="text-white/80 text-xs sm:text-sm md:text-base lg:text-lg mb-10 leading-relaxed font-body max-w-lg mx-auto lg:mx-0 drop-shadow-md">
                   {variant.description}
                 </p>
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex flex-col sm:flex-row gap-5 font-label mt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 font-label mt-2">
               <Link
                 href="/menu"
-                className="group relative flex items-center justify-center px-10 py-4 rounded-full bg-gradient-to-b from-[var(--color-secondary)] to-[#cca176] text-[#1a120b] font-bold uppercase tracking-[0.2em] text-xs shadow-[0_8px_32px_rgba(236,190,142,0.3),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_12px_66px_rgba(236,190,142,0.5),inset_0_1px_0_rgba(255,255,255,0.8)] hover:-translate-y-1 transition-all duration-300"
+                className="w-full sm:w-auto group relative flex items-center justify-center px-10 py-4 rounded-full bg-gradient-to-b from-[var(--color-secondary)] to-[#cca176] text-[#1a120b] font-bold uppercase tracking-[0.2em] text-xs shadow-[0_8px_32px_rgba(236,190,142,0.3),inset_0_1px_0_rgba(255,255,255,0.6)] hover:shadow-[0_12px_66px_rgba(236,190,142,0.5),inset_0_1px_0_rgba(255,255,255,0.8)] hover:-translate-y-1 transition-all duration-300"
               >
                 Order Now
               </Link>
               <Link
                 href="/reservations"
-                className="group relative flex items-center justify-center px-10 py-4 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-white font-semibold uppercase tracking-[0.2em] text-xs shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] hover:bg-white/10 hover:border-white/30 hover:-translate-y-1 transition-all duration-300"
+                className="w-full sm:w-auto group relative flex items-center justify-center px-10 py-4 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-white font-semibold uppercase tracking-[0.2em] text-xs shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] hover:bg-white/10 hover:border-white/30 hover:-translate-y-1 transition-all duration-300"
               >
                 Reserve a Table
               </Link>
@@ -289,8 +289,8 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
           </div>
         </div>
 
-        {/* Right Navigation */}
-        <div className="absolute right-0 top-0 h-full w-24 md:w-32 flex flex-col items-center justify-center z-20">
+        {/* Right Navigation — Desktop Only */}
+        <div className="hidden lg:flex absolute right-0 top-0 h-full w-32 flex-col items-center justify-center z-20">
           <div className="flex flex-col items-center gap-8 bg-black/20 backdrop-blur-sm py-12 px-4 rounded-full border border-white/10">
             <button
               onClick={handlePrev}

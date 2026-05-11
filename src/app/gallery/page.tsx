@@ -241,7 +241,7 @@ export default function GalleryPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="font-heading text-6xl md:text-8xl font-medium italic text-white leading-[0.9] tracking-tight mb-6"
+            className="font-heading text-5xl sm:text-7xl md:text-8xl font-medium italic text-white leading-[0.9] tracking-tight mb-6"
           >
             Our
             <br />
@@ -567,7 +567,7 @@ function CtaSection() {
           <div className="h-px w-12 bg-[var(--color-secondary)]" />
         </div>
 
-        <h2 className="font-heading text-5xl md:text-7xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-6">
+        <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl italic font-medium text-[var(--color-on-background)] leading-[0.95] tracking-tight mb-6">
           Visit Us &
           <br />
           <span className="text-[var(--color-secondary)]">Make Memories</span>

@@ -66,9 +66,9 @@ export default function CartPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="font-heading italic text-4xl md:text-5xl lg:text-6xl text-[var(--color-on-surface)] flex items-center gap-4">
+          <h1 className="font-heading italic text-3xl sm:text-5xl lg:text-6xl text-[var(--color-on-surface)] flex items-center gap-4">
             Your Cart
-            <ShoppingBag size={40} className="text-[var(--color-secondary)] opacity-50" />
+            <ShoppingBag size={32} className="text-[var(--color-secondary)] opacity-50 md:w-10 md:h-10" />
           </h1>
         </motion.div>
 
@@ -116,7 +116,7 @@ export default function CartPage() {
                     
                     <div className="flex-grow flex flex-col justify-center h-full">
                       <h3 className="font-heading text-xl text-[var(--color-on-surface)] mb-1">{item.menuItem.name}</h3>
-                      <p className="font-label text-xs tracking-wider text-[var(--color-secondary)]">${item.menuItem.price.toFixed(2)}</p>
+                      <p className="font-label text-xs tracking-wider text-[var(--color-secondary)]">Rs. {item.menuItem.price.toFixed(2)}</p>
                       
                       {item.customization && (
                         <p className="text-[10px] text-[var(--color-on-surface-variant)] mt-2 uppercase tracking-wider">
@@ -146,7 +146,7 @@ export default function CartPage() {
                       
                       <div className="text-right flex flex-col items-end gap-2">
                         <p className="font-heading text-lg font-bold">
-                          ${(item.menuItem.price * item.quantity).toFixed(2)}
+                          Rs. {(item.menuItem.price * item.quantity).toFixed(2)}
                         </p>
                         <button 
                           onClick={() => removeItem(item.id)}
@@ -218,16 +218,16 @@ export default function CartPage() {
                 <div className="border-t border-[var(--color-outline-variant)] py-4 space-y-3">
                   <div className="flex justify-between items-center text-sm text-[var(--color-on-surface-variant)]">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>Rs. {subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center text-sm text-[var(--color-on-surface-variant)]">
                     <span>Taxes & Fees (10%)</span>
-                    <span>${(subtotal * 0.1).toFixed(2)}</span>
+                    <span>Rs. {(subtotal * 0.1).toFixed(2)}</span>
                   </div>
                   {orderType === "DELIVERY" && (
                     <div className="flex justify-between items-center text-sm text-[var(--color-on-surface-variant)]">
                       <span>Delivery Fee</span>
-                      <span>$5.00</span>
+                      <span>Rs. 500.00</span>
                     </div>
                   )}
                 </div>
@@ -236,7 +236,7 @@ export default function CartPage() {
                   <div className="flex justify-between items-center">
                     <span className="font-heading text-xl text-[var(--color-on-surface)]">Total</span>
                     <span className="font-heading text-3xl text-[var(--color-secondary)]">
-                      ${(subtotal * 1.1 + (orderType === "DELIVERY" ? 5 : 0)).toFixed(2)}
+                      Rs. {(subtotal * 1.1 + (orderType === "DELIVERY" ? 500 : 0)).toFixed(2)}
                     </span>
                   </div>
                 </div>

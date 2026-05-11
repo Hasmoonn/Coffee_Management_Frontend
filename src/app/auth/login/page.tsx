@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   return (
     <motion.div
-      className="w-full max-w-[420px]"
+      className="w-full max-w-[420px] py-6 lg:py-12"
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -75,7 +75,7 @@ export default function LoginPage() {
         </motion.div>
 
         <motion.h1
-          className="font-heading text-4xl md:text-5xl font-medium text-[var(--color-on-background)] mb-3 leading-tight"
+          className="font-heading text-3xl sm:text-4xl md:text-5xl font-medium text-[var(--color-on-background)] mb-3 leading-tight"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}

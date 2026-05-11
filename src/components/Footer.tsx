@@ -105,7 +105,7 @@ export default function Footer() {
         className="pointer-events-none absolute inset-x-0 top-12 flex items-center justify-center overflow-hidden"
         aria-hidden
       >
-        <span className="font-heading italic text-[12vw] font-bold text-[var(--color-secondary)]/5 select-none whitespace-nowrap leading-none tracking-tight">
+        <span className="font-heading italic text-[15vw] sm:text-[12vw] font-bold text-[var(--color-secondary)]/5 select-none whitespace-nowrap leading-none tracking-tight">
           Brew & Co.
         </span>
       </motion.div>
@@ -131,7 +131,7 @@ export default function Footer() {
 
               <p className="font-body text-[var(--color-on-surface-variant)] leading-relaxed max-w-sm mb-8 text-base">
                 Crafting cinematic coffee experiences in the heart of
-                Seattle&apos;s Artisan District. Every cup is a small act of
+                Colombo&apos;s Artisan District. Every cup is a small act of
                 devotion.
               </p>
 
@@ -142,9 +142,11 @@ export default function Footer() {
                   className="text-[var(--color-secondary)] mt-0.5 flex-shrink-0"
                 />
                 <p className="font-body text-[var(--color-on-surface-variant)] text-sm leading-relaxed">
-                  123 Coffee Lane, Artisan District
+                  123 Galle Road, Colombo 03
                   <br />
-                  Seattle, WA 98101
+                  Colombo, Sri Lanka
+                  <br />
+                  +94 11 234 5678
                 </p>
               </div>
 
@@ -261,7 +263,7 @@ export default function Footer() {
         >
           <p className="font-label text-[var(--color-on-surface-variant)]/50 text-xs tracking-wider">
             © {new Date().getFullYear()} Brew & Co. All rights reserved.
-            Crafted with obsession in Seattle, WA.
+            Crafted with obsession in Colombo, Sri Lanka.
           </p>
 
           <div className="flex items-center gap-6">
