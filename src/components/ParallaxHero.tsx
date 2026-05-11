@@ -27,31 +27,51 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // Cache the 2D context so we never call getContext() inside scroll/RAF
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
+  // Global cache to store frames for all variants
+  const globalImageCache = useRef<Record<string, (HTMLImageElement | null)[]>>({});
   const preloadCalledRef = useRef(false);
-  const allFramesLoadedRef = useRef(false); // true once every frame is ready
-  const rafPendingRef = useRef(false);       // RAF de-dupe flag
-  const lastFrameIndexRef = useRef(-1);      // avoid re-drawing the same frame
+  const allFramesLoadedRef = useRef<Record<string, boolean>>({});
+  const rafPendingRef = useRef(false);
+  const lastFrameIndexRef = useRef(-1);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { theme } = useTheme();
   const variant = variants[currentIndex];
 
+  // ── Scroll activity detection ──────────────────────────────────────────
+  useEffect(() => {
+    const handleScrollActivity = () => {
+      if (!isScrolling) setIsScrolling(true);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => setIsScrolling(false), 1500);
+    };
+    window.addEventListener("scroll", handleScrollActivity, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScrollActivity);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, [isScrolling]);
+
   // ── Cache canvas context once on mount ──────────────────────────────────
   useEffect(() => {
     if (canvasRef.current) {
-      ctxRef.current = canvasRef.current.getContext("2d");
+      ctxRef.current = canvasRef.current.getContext("2d", { alpha: false });
     }
   }, []);
 
   // ── Draw a specific frame index ──────────────────────────────────────────
-  const drawFrame = useCallback((index: number) => {
-    const img = imagesRef.current[index];
-    if (!img || !ctxRef.current || !canvasRef.current) return;
+  const drawFrame = useCallback((index: number, variantId: string) => {
+    const frames = globalImageCache.current[variantId];
+    if (!frames || !ctxRef.current || !canvasRef.current) return;
+    
+    const img = frames[index];
+    if (!img) return;
+
     ctxRef.current.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
     lastFrameIndexRef.current = index;
   }, []);
@@ -59,105 +79,101 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
   // ── Image preloading ─────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
-    setIsLoading(true);
-    setProgress(0);
-    preloadCalledRef.current = false;
-    allFramesLoadedRef.current = false;
-    lastFrameIndexRef.current = -1;
+    
+    // If we already have this variant's initial frames, we might not need to show loading
+    if (!globalImageCache.current[variant.id]) {
+      setIsLoading(true);
+      setProgress(0);
+    } else {
+      setIsLoading(false);
+      // Even if already "loaded", draw the first frame of the new variant
+      requestAnimationFrame(() => drawFrame(0, variant.id));
+    }
 
-    // Pre-allocate so the scroll handler can index by position immediately
-    const images: (HTMLImageElement | null)[] = new Array(variant.frameCount).fill(null);
-    imagesRef.current = images;
-    let loadedCount = 0;
-
-    document.documentElement.style.setProperty("--current-theme-color", variant.themeColor);
-
-    // Tiny 4×3 fallback — no per-frame canvas generation overhead
-    let fallbackSrc: string | null = null;
-    const getFallbackSrc = (): string => {
-      if (fallbackSrc) return fallbackSrc;
-      const fc = document.createElement("canvas");
-      fc.width = 4; fc.height = 3;
-      const fctx = fc.getContext("2d");
-      if (fctx) {
-        fctx.fillStyle = theme === "dark" ? "#1A120B" : "#FDF6EC";
-        fctx.fillRect(0, 0, 4, 3);
-      }
-      fallbackSrc = fc.toDataURL("image/webp");
-      return fallbackSrc;
-    };
-
-    const loadSingleImage = (i: number): Promise<void> =>
+    const loadSingleImage = (v: DrinkVariant, i: number): Promise<void> =>
       new Promise<void>((resolve) => {
+        if (!globalImageCache.current[v.id]) {
+          globalImageCache.current[v.id] = new Array(v.frameCount).fill(null);
+        }
+        
+        if (globalImageCache.current[v.id][i]) {
+          resolve();
+          return;
+        }
+
         const img = new Image();
         const frameNum = i.toString().padStart(3, "0");
-        img.src = `${variant.sequencePath}frame_${frameNum}.webp`;
+        img.src = `${v.sequencePath}frame_${frameNum}.webp`;
 
         const finish = () => {
           if (cancelled) { resolve(); return; }
-          images[i] = img;
-          loadedCount++;
-          setProgress(Math.round((loadedCount / variant.frameCount) * 100));
+          globalImageCache.current[v.id][i] = img;
+          
+          if (v.id === variant.id) {
+            const loaded = globalImageCache.current[v.id].filter(Boolean).length;
+            setProgress(Math.round((loaded / v.frameCount) * 100));
+          }
           resolve();
         };
 
         img.onload = finish;
         img.onerror = () => {
-          // Use tiny fallback — set src directly, no waiting for another onload
-          img.src = getFallbackSrc();
+          const fc = document.createElement("canvas");
+          fc.width = 4; fc.height = 3;
+          const fctx = fc.getContext("2d");
+          if (fctx) {
+            fctx.fillStyle = theme === "dark" ? "#1A120B" : "#FDF6EC";
+            fctx.fillRect(0, 0, 4, 3);
+          }
+          img.src = fc.toDataURL("image/webp");
           finish();
         };
       });
 
-    const INITIAL_FRAMES = Math.min(50, variant.frameCount);
-    const PHASE1_BATCH = 12;
-
     const loadAllImages = async () => {
-      // ── Phase 1: first 50 frames in small parallel batches ───────────────
-      // Keep batches small during Phase 1 so the network isn't saturated and
-      // frame 0 arrives ASAP to be drawn before the overlay lifts.
-      for (let start = 0; start < INITIAL_FRAMES; start += PHASE1_BATCH) {
+      // 1. Preload first frame of ALL variants immediately for instant switching
+      await Promise.all(variants.map(v => loadSingleImage(v, 0)));
+      if (cancelled) return;
+
+      // 2. Preload first 50 frames of CURRENT variant
+      const INITIAL_FRAMES = Math.min(50, variant.frameCount);
+      const PHASE1_BATCH = 15;
+      
+      for (let start = 1; start < INITIAL_FRAMES; start += PHASE1_BATCH) {
         if (cancelled) return;
         const end = Math.min(start + PHASE1_BATCH, INITIAL_FRAMES);
         await Promise.all(
-          Array.from({ length: end - start }, (_, k) => loadSingleImage(start + k))
+          Array.from({ length: end - start }, (_, k) => loadSingleImage(variant, start + k))
         );
       }
 
       if (cancelled) return;
 
-      // Dismiss overlay and draw frame 0
+      // Dismiss overlay
       if (!preloadCalledRef.current) {
         preloadCalledRef.current = true;
         setIsLoading(false);
         onPreloadComplete();
-        drawFrame(0);
+        drawFrame(0, variant.id);
       }
 
-      // ── Phase 2: ALL remaining frames fired simultaneously ────────────────
-      // HTTP/2 multiplexes them; each resolves as soon as its bytes arrive.
-      // The scroll handler picks the nearest already-loaded frame while gaps fill in.
-      if (!cancelled) {
-        const remaining: Promise<void>[] = [];
-        for (let i = INITIAL_FRAMES; i < variant.frameCount; i++) {
-          remaining.push(loadSingleImage(i));
-        }
-        await Promise.all(remaining);
-        if (!cancelled) allFramesLoadedRef.current = true;
+      // 3. Load the rest of the current variant
+      const remaining: Promise<void>[] = [];
+      for (let i = INITIAL_FRAMES; i < variant.frameCount; i++) {
+        remaining.push(loadSingleImage(variant, i));
       }
+      await Promise.all(remaining);
+      if (!cancelled) allFramesLoadedRef.current[variant.id] = true;
     };
 
     loadAllImages();
     return () => { cancelled = true; };
-  }, [currentIndex, variant, theme, drawFrame, onPreloadComplete]);
+  }, [currentIndex, variant, theme, drawFrame, onPreloadComplete, variants]);
 
   // ── RAF-throttled scroll handler ─────────────────────────────────────────
-  // KEY FIX: never call drawImage outside of a requestAnimationFrame callback.
-  // This prevents dozens of 1920×1080 canvas paints per second jamming the main thread.
   useEffect(() => {
     const handleScroll = () => {
-      if (isLoading) return;           // overlay still showing — nothing to draw
-      if (rafPendingRef.current) return; // a RAF is already queued for this frame
+      if (isLoading || rafPendingRef.current) return;
 
       rafPendingRef.current = true;
       requestAnimationFrame(() => {
@@ -168,24 +184,24 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
         const scrollFraction = Math.max(0, Math.min(1, scrollTop / maxScroll));
         const targetIndex = Math.floor(scrollFraction * (variant.frameCount - 1));
 
-        // Skip if we'd draw the same frame as last time
         if (targetIndex === lastFrameIndexRef.current) return;
 
-        // Find nearest already-loaded frame (scan backwards)
-        let safeIndex = targetIndex;
-        while (safeIndex > 0 && !imagesRef.current[safeIndex]) safeIndex--;
+        const frames = globalImageCache.current[variant.id];
+        if (!frames) return;
 
-        drawFrame(safeIndex);
+        let safeIndex = targetIndex;
+        while (safeIndex > 0 && !frames[safeIndex]) safeIndex--;
+
+        drawFrame(safeIndex, variant.id);
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      // Cancel any pending RAF on cleanup
       rafPendingRef.current = false;
     };
-  }, [isLoading, variant.frameCount, drawFrame]);
+  }, [isLoading, variant.frameCount, variant.id, drawFrame]);
 
   // ── Manual prev/next ─────────────────────────────────────────────────────
   const handlePrev = () => {
@@ -198,19 +214,17 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
     setCurrentIndex((prev) => (prev === variants.length - 1 ? 0 : prev + 1));
   };
 
-  // ── Auto-cycle — only when ALL frames for the current variant are loaded ──
-  // This prevents restarting a 240-frame load mid-way through the previous one.
+  // ── Auto-cycle — only when idle and current variant is loaded ──────────
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || isScrolling) return;
 
     const interval = setInterval(() => {
-      // Don't cycle if background frames are still downloading
-      if (!allFramesLoadedRef.current) return;
+      if (!allFramesLoadedRef.current[variant.id]) return;
       setCurrentIndex((prev) => (prev === variants.length - 1 ? 0 : prev + 1));
-    }, 3000);
+    }, 4000);
 
     return () => clearInterval(interval);
-  }, [isLoading, variants.length]);
+  }, [isLoading, isScrolling, variant.id, variants.length]);
 
   return (
     <section className="relative h-[300vh] w-full bg-background" id="hero">
