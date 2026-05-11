@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Serif, Be_Vietnam_Pro, Work_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "react-hot-toast";
 
 const headingFont = Noto_Serif({ 
   subsets: ["latin"], 
@@ -37,6 +38,17 @@ export default function RootLayout({
       <body className={`${bodyFont.variable} ${headingFont.variable} ${labelFont.variable} antialiased font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
           {children}
+          <Toaster 
+            position="bottom-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: 'var(--color-surface-container)',
+                color: 'var(--color-on-surface)',
+                border: '1px border-[var(--color-outline-variant)]',
+              },
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

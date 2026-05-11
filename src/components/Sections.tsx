@@ -12,8 +12,14 @@ import {
   Users,
   ArrowRight,
   Flame,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { useFeaturedItems } from "@/hooks/useMenu";
+import { useCart } from "@/hooks/useCart";
+import { getImageUrl } from "@/lib/api";
+import { BackendMenuItem } from "@/types/menu";
+import toast from "react-hot-toast";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 50 },
@@ -23,39 +29,6 @@ const fadeUp = {
     transition: { duration: 0.8, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] as any },
   }),
 };
-
-const DRINKS = [
-  {
-    name: "Velvet Espresso",
-    price: "$5.50",
-    desc: "A double shot of our dark espresso blend, extracted for 28 seconds to capture the perfect crema.",
-    tag: "Best Seller",
-    tagColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-    image:
-      "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&h=800&fit=crop",
-    gradient: "from-amber-950/95 via-amber-900/50 to-transparent",
-  },
-  {
-    name: "Caramel Macchiato",
-    price: "$6.00",
-    desc: "Vanilla syrup, steamed milk, espresso poured over, finished with buttery caramel drizzle.",
-    tag: "Fan Favorite",
-    tagColor: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-    image:
-      "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=600&h=800&fit=crop",
-    gradient: "from-orange-950/95 via-orange-900/50 to-transparent",
-  },
-  {
-    name: "Pour Over Reserve",
-    price: "$7.00",
-    desc: "Single-origin Ethiopian beans in a V60, highlighting delicate florals and bright citrus acidity.",
-    tag: "Chef's Pick",
-    tagColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-    image:
-      "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&h=800&fit=crop",
-    gradient: "from-stone-950/95 via-stone-900/50 to-transparent",
-  },
-];
 
 const FEATURES = [
   {
@@ -121,6 +94,8 @@ export default function Sections() {
 
 /* ─── Menu Section ─────────────────────────────────────────────────── */
 function MenuSection() {
+  const { items, loading, error } = useFeaturedItems();
+
   return (
     <section
       id="menu"
@@ -159,7 +134,7 @@ function MenuSection() {
               the precision of a musician tuning to perfect pitch.
             </p>
             <Link
-              href="#menu"
+              href="/menu"
               className="inline-flex items-center gap-3 text-[var(--color-secondary)] font-label text-xs tracking-[0.2em] uppercase group"
             >
               View Full Menu
@@ -172,23 +147,71 @@ function MenuSection() {
         </motion.div>
 
         {/* Drink Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {DRINKS.map((drink, i) => (
-            <DrinkCard key={drink.name} drink={drink} index={i} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                className="h-[580px] rounded-2xl bg-[var(--color-surface-container)] animate-pulse flex items-center justify-center"
+              >
+                <Loader2 className="animate-spin text-[var(--color-secondary)]/20" size={40} />
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 border border-dashed border-[var(--color-outline-variant)] rounded-2xl">
+            <p className="text-[var(--color-on-surface-variant)]">Failed to load signature collection.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {items.slice(0, 3).map((item, i) => (
+              <DrinkCard key={item.id} item={item} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
 function DrinkCard({
-  drink,
+  item,
   index,
 }: {
-  drink: (typeof DRINKS)[0];
+  item: BackendMenuItem;
   index: number;
 }) {
+  const { addItem } = useCart();
+  
+  const getVariantStyles = (idx: number) => {
+    const styles = [
+      {
+        tag: "Best Seller",
+        tagColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+        gradient: "from-amber-950/95 via-amber-900/50 to-transparent",
+      },
+      {
+        tag: "Fan Favorite",
+        tagColor: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+        gradient: "from-orange-950/95 via-orange-900/50 to-transparent",
+      },
+      {
+        tag: "Chef's Pick",
+        tagColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+        gradient: "from-stone-950/95 via-stone-900/50 to-transparent",
+      },
+    ];
+    return styles[idx % styles.length];
+  };
+
+  const style = getVariantStyles(index);
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem(item);
+    toast.success(`Added ${item.name} to order`);
+  };
+
   return (
     <motion.div
       initial="hidden"
@@ -200,8 +223,8 @@ function DrinkCard({
     >
       {/* Image */}
       <motion.img
-        src={drink.image}
-        alt={drink.name}
+        src={getImageUrl(item.imageUrl)}
+        alt={item.name}
         className="absolute inset-0 w-full h-full object-cover"
         initial={{ scale: 1.05 }}
         whileInView={{ scale: 1 }}
@@ -211,20 +234,20 @@ function DrinkCard({
 
       {/* Gradient overlays */}
       <div
-        className={`absolute inset-0 bg-gradient-to-t ${drink.gradient}`}
+        className={`absolute inset-0 bg-gradient-to-t ${style.gradient}`}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
 
       {/* Top area */}
       <div className="absolute top-6 left-6 right-6 flex items-start justify-between">
         <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[10px] font-label tracking-[0.15em] uppercase backdrop-blur-sm ${drink.tagColor}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[10px] font-label tracking-[0.15em] uppercase backdrop-blur-sm ${style.tagColor}`}
         >
           <Flame size={9} />
-          {drink.tag}
+          {item.isFeatured ? "Featured" : style.tag}
         </span>
         <span className="font-heading text-2xl font-medium text-white drop-shadow-lg">
-          {drink.price}
+          ${item.price.toFixed(2)}
         </span>
       </div>
 
@@ -236,10 +259,10 @@ function DrinkCard({
           transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
         >
           <h3 className="font-heading text-3xl font-medium italic text-white mb-3 leading-tight">
-            {drink.name}
+            {item.name}
           </h3>
-          <p className="font-body text-white/70 text-sm leading-relaxed mb-6">
-            {drink.desc}
+          <p className="font-body text-white/70 text-sm leading-relaxed mb-6 line-clamp-2">
+            {item.description}
           </p>
 
           <motion.button
@@ -248,6 +271,7 @@ function DrinkCard({
               boxShadow: "0 8px 30px rgba(196,168,130,0.4)",
             }}
             whileTap={{ scale: 0.97 }}
+            onClick={handleAdd}
             className="w-full py-3.5 rounded-full bg-[var(--color-secondary)] text-[#1a120b] font-label font-bold uppercase tracking-[0.15em] text-xs hover:brightness-105 transition-all"
           >
             Add to Order
@@ -256,7 +280,7 @@ function DrinkCard({
       </div>
 
       {/* Hover shimmer */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-secondary)]/0 via-[var(--color-secondary)]/5 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-secondary)]/0 via-[var(--color-secondary)]/5 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-2xl" />
     </motion.div>
   );
 }
