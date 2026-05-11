@@ -86,14 +86,14 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
     };
 
     const INITIAL_FRAMES = Math.min(50, variant.frameCount);
-    const BATCH_SIZE = 12;
+    const PHASE1_BATCH = 12; // parallel batch size while overlay is still showing
 
     const loadAllImages = async () => {
       // ── Phase 1: load first 50 frames in parallel batches ──────────────
       // These must be ready before the overlay dismisses so early scroll works.
-      for (let start = 0; start < INITIAL_FRAMES; start += BATCH_SIZE) {
+      for (let start = 0; start < INITIAL_FRAMES; start += PHASE1_BATCH) {
         if (cancelled) return;
-        const end = Math.min(start + BATCH_SIZE, INITIAL_FRAMES);
+        const end = Math.min(start + PHASE1_BATCH, INITIAL_FRAMES);
         const batch: Promise<void>[] = [];
         for (let i = start; i < end; i++) {
           batch.push(loadSingleImage(i));
@@ -113,15 +113,17 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
         }
       }
 
-      // ── Phase 2: load the rest silently in the background ──────────────
-      for (let start = INITIAL_FRAMES; start < variant.frameCount; start += BATCH_SIZE) {
-        if (cancelled) break;
-        const end = Math.min(start + BATCH_SIZE, variant.frameCount);
-        const batch: Promise<void>[] = [];
-        for (let i = start; i < end; i++) {
-          batch.push(loadSingleImage(i));
+      // ── Phase 2: fire ALL remaining frames simultaneously ──────────────
+      // Don't batch-and-wait — kick every request off at once so the browser
+      // (HTTP/2 multiplexing) downloads them as fast as the network allows.
+      // Frames become available one-by-one as they arrive; the scroll handler
+      // already falls back to the nearest loaded frame, so no jank.
+      if (!cancelled) {
+        const remaining: Promise<void>[] = [];
+        for (let i = INITIAL_FRAMES; i < variant.frameCount; i++) {
+          remaining.push(loadSingleImage(i));
         }
-        await Promise.all(batch);
+        await Promise.all(remaining);
       }
     };
 
