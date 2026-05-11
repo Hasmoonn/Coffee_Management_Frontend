@@ -73,18 +73,6 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
           images[i] = img;
           loadedCount++;
           setProgress(Math.round((loadedCount / variant.frameCount) * 100));
-
-          // ---- FAST-START: dismiss overlay as soon as frame 0 is ready ----
-          if (i === 0 && !preloadCalledRef.current) {
-            preloadCalledRef.current = true;
-            setIsLoading(false);
-            onPreloadComplete();
-            // Draw frame 0 immediately
-            if (canvasRef.current) {
-              const ctx = canvasRef.current.getContext("2d");
-              if (ctx) ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
-            }
-          }
           resolve();
         };
 
@@ -97,14 +85,36 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
       });
     };
 
-    const loadAllImages = async () => {
-      // Load frame 0 first (needed to dismiss overlay ASAP)
-      await loadSingleImage(0);
-      if (cancelled) return;
+    const INITIAL_FRAMES = Math.min(50, variant.frameCount);
+    const BATCH_SIZE = 12;
 
-      // Load remaining frames in parallel batches to avoid browser connection limits
-      const BATCH_SIZE = 12;
-      for (let start = 1; start < variant.frameCount; start += BATCH_SIZE) {
+    const loadAllImages = async () => {
+      // ── Phase 1: load first 50 frames in parallel batches ──────────────
+      // These must be ready before the overlay dismisses so early scroll works.
+      for (let start = 0; start < INITIAL_FRAMES; start += BATCH_SIZE) {
+        if (cancelled) return;
+        const end = Math.min(start + BATCH_SIZE, INITIAL_FRAMES);
+        const batch: Promise<void>[] = [];
+        for (let i = start; i < end; i++) {
+          batch.push(loadSingleImage(i));
+        }
+        await Promise.all(batch);
+      }
+
+      // Dismiss overlay once first 50 frames are ready
+      if (!cancelled && !preloadCalledRef.current) {
+        preloadCalledRef.current = true;
+        setIsLoading(false);
+        onPreloadComplete();
+        // Draw frame 0 immediately
+        if (canvasRef.current && images[0]) {
+          const ctx = canvasRef.current.getContext("2d");
+          if (ctx) ctx.drawImage(images[0]!, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        }
+      }
+
+      // ── Phase 2: load the rest silently in the background ──────────────
+      for (let start = INITIAL_FRAMES; start < variant.frameCount; start += BATCH_SIZE) {
         if (cancelled) break;
         const end = Math.min(start + BATCH_SIZE, variant.frameCount);
         const batch: Promise<void>[] = [];
