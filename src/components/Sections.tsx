@@ -17,9 +17,11 @@ import {
 import Link from "next/link";
 import { useFeaturedItems } from "@/hooks/useMenu";
 import { useCart } from "@/hooks/useCart";
+import { useUser } from "@/hooks/useUser";
 import { getImageUrl } from "@/lib/api";
 import { BackendMenuItem } from "@/types/menu";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 50 },
@@ -182,6 +184,8 @@ function DrinkCard({
   index: number;
 }) {
   const { addItem } = useCart();
+  const { user } = useUser();
+  const router = useRouter();
   
   const getVariantStyles = (idx: number) => {
     const styles = [
@@ -208,8 +212,26 @@ function DrinkCard({
 
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    if (!user) {
+      toast.error("Please login to add items to your order", {
+        icon: "🔒",
+        duration: 4000
+      });
+      router.push("/auth/login");
+      return;
+    }
+
     addItem(item);
-    toast.success(`Added ${item.name} to order`);
+    toast.success(`Added ${item.name} to order`, {
+      icon: "☕",
+      style: {
+        borderRadius: "12px",
+        background: "#1A120B",
+        color: "#FDF6EC",
+        border: "1px solid rgba(196,168,130,0.2)"
+      }
+    });
   };
 
   return (

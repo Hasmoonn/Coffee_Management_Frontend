@@ -29,7 +29,33 @@ export function useCart() {
   const saveCart = (newItems: CartItem[]) => {
     setItems(newItems);
     localStorage.setItem("cart", JSON.stringify(newItems));
+    // Dispatch custom event for cross-hook synchronization
+    window.dispatchEvent(new Event("cart-updated"));
   };
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      const saved = localStorage.getItem("cart");
+      if (saved) {
+        try {
+          setItems(JSON.parse(saved));
+        } catch (e) {
+          console.error("Failed to parse cart", e);
+        }
+      } else {
+        setItems([]);
+      }
+    };
+
+    window.addEventListener("cart-updated", handleUpdate);
+    // Also listen for storage events from other tabs
+    window.addEventListener("storage", handleUpdate);
+
+    return () => {
+      window.removeEventListener("cart-updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
 
   const addItem = (menuItem: MenuItem, quantity: number = 1, customization?: any) => {
     const existingIndex = items.findIndex(
