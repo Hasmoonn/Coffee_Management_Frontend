@@ -52,8 +52,9 @@ export default function Home() {
   // Enforce a minimum display time of 1.2s for the overlay
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      if (preloadReadyRef.current) setIsPreloaded(true);
-    }, 1200);
+      if (preloadReadyRef.current) 
+        setIsPreloaded(true);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
