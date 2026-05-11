@@ -215,7 +215,6 @@ function DrinkCard({
     
     if (!user) {
       toast.error("Please login to add items to your order", {
-        icon: "🔒",
         duration: 4000
       });
       router.push("/auth/login");
@@ -224,7 +223,7 @@ function DrinkCard({
 
     addItem(item);
     toast.success(`Added ${item.name} to order`, {
-      icon: "☕",
+      icon: "",
       style: {
         borderRadius: "12px",
         background: "#1A120B",
