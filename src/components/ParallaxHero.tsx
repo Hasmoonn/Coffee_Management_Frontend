@@ -27,6 +27,7 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const preloadCalledRef = useRef(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { setTheme, theme } = useTheme();
 
@@ -35,67 +36,88 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
   
   // Preload images for current variant
   useEffect(() => {
+    let cancelled = false;
     setIsLoading(true);
     setProgress(0);
-    const images: HTMLImageElement[] = [];
+    preloadCalledRef.current = false;
+
+    // Pre-allocate the images array so scroll handler can use partial results
+    const images: (HTMLImageElement | null)[] = new Array(variant.frameCount).fill(null);
+    imagesRef.current = images as HTMLImageElement[];
     let loadedCount = 0;
-    
+
     // Set theme color CSS variable globally for CTA buttons
     document.documentElement.style.setProperty('--current-theme-color', variant.themeColor);
 
-    const loadImages = async () => {
-      for (let i = 0; i < variant.frameCount; i++) {
+    // Lightweight fallback: single solid color, no text (avoids per-frame canvas CPU cost)
+    const makeFallbackSrc = (): string => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 4;
+      canvas.height = 3;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.fillStyle = theme === 'dark' ? '#1A120B' : '#FDF6EC';
+        ctx.fillRect(0, 0, 4, 3);
+      }
+      return canvas.toDataURL("image/webp");
+    };
+
+    const loadSingleImage = (i: number): Promise<void> => {
+      return new Promise<void>((resolve) => {
         const img = new Image();
         const frameNum = i.toString().padStart(3, "0");
-        // We add a fallback mechanism here so the app doesn't crash without real images
         img.src = `${variant.sequencePath}frame_${frameNum}.webp`;
-        
-        await new Promise<void>((resolve) => {
-          img.onload = () => {
-            loadedCount++;
-            setProgress(Math.round((loadedCount / variant.frameCount) * 100));
-            resolve();
-          };
-          img.onerror = () => {
-            // Create a fallback colored canvas image if image doesn't exist
-            const canvas = document.createElement("canvas");
-            canvas.width = 1920;
-            canvas.height = 1080;
-            const ctx = canvas.getContext("2d");
-            if (ctx) {
-              // Draw gradient based on theme color and frame number
-              const gradient = ctx.createLinearGradient(0, 0, 1920, 1080);
-              gradient.addColorStop(0, variant.themeColor);
-              gradient.addColorStop(1, theme === 'dark' ? '#1A120B' : '#FDF6EC');
-              ctx.fillStyle = gradient;
-              ctx.fillRect(0, 0, 1920, 1080);
-              ctx.fillStyle = "rgba(255,255,255,0.1)";
-              ctx.font = "120px Playfair Display";
-              ctx.fillText(`${variant.name} - Frame ${i}`, 200, 540);
+
+        const finish = () => {
+          if (cancelled) { resolve(); return; }
+          images[i] = img;
+          loadedCount++;
+          setProgress(Math.round((loadedCount / variant.frameCount) * 100));
+
+          // ---- FAST-START: dismiss overlay as soon as frame 0 is ready ----
+          if (i === 0 && !preloadCalledRef.current) {
+            preloadCalledRef.current = true;
+            setIsLoading(false);
+            onPreloadComplete();
+            // Draw frame 0 immediately
+            if (canvasRef.current) {
+              const ctx = canvasRef.current.getContext("2d");
+              if (ctx) ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
             }
-            img.src = canvas.toDataURL("image/webp");
-            // Don't wait for onload again to prevent infinite loop
-            loadedCount++;
-            setProgress(Math.round((loadedCount / variant.frameCount) * 100));
-            resolve();
-          };
-        });
-        images.push(img);
-      }
-      imagesRef.current = images;
-      setIsLoading(false);
-      onPreloadComplete();
-      
-      // Draw first frame
-      if (canvasRef.current && images.length > 0) {
-        const ctx = canvasRef.current.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(images[0], 0, 0, canvasRef.current.width, canvasRef.current.height);
+          }
+          resolve();
+        };
+
+        img.onload = finish;
+        img.onerror = () => {
+          img.src = makeFallbackSrc();
+          // Resolve without waiting for the tiny fallback reload
+          finish();
+        };
+      });
+    };
+
+    const loadAllImages = async () => {
+      // Load frame 0 first (needed to dismiss overlay ASAP)
+      await loadSingleImage(0);
+      if (cancelled) return;
+
+      // Load remaining frames in parallel batches to avoid browser connection limits
+      const BATCH_SIZE = 12;
+      for (let start = 1; start < variant.frameCount; start += BATCH_SIZE) {
+        if (cancelled) break;
+        const end = Math.min(start + BATCH_SIZE, variant.frameCount);
+        const batch: Promise<void>[] = [];
+        for (let i = start; i < end; i++) {
+          batch.push(loadSingleImage(i));
         }
+        await Promise.all(batch);
       }
     };
-    
-    loadImages();
+
+    loadAllImages();
+
+    return () => { cancelled = true; };
   }, [currentIndex, variant, theme]); // Added theme to re-render fallback images if theme changes
 
   // Scroll mapping
@@ -109,10 +131,14 @@ export default function ParallaxHero({ variants, shopName, tagline, onPreloadCom
       
       const frameIndex = Math.floor(scrollFraction * (variant.frameCount - 1));
       
-      if (canvasRef.current && imagesRef.current[frameIndex]) {
+      // Find the nearest loaded frame (scan backwards for the closest ready frame)
+      let safeIndex = frameIndex;
+      while (safeIndex > 0 && !imagesRef.current[safeIndex]) safeIndex--;
+
+      if (canvasRef.current && imagesRef.current[safeIndex]) {
         const ctx = canvasRef.current.getContext("2d");
         if (ctx) {
-          ctx.drawImage(imagesRef.current[frameIndex], 0, 0, canvasRef.current.width, canvasRef.current.height);
+          ctx.drawImage(imagesRef.current[safeIndex], 0, 0, canvasRef.current.width, canvasRef.current.height);
         }
       }
     };

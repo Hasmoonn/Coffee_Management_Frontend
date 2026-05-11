@@ -47,6 +47,21 @@ import { useUser } from "@/hooks/useUser";
 
 export default function Home() {
   const [isPreloaded, setIsPreloaded] = useState(false);
+  const preloadReadyRef = React.useRef(false);
+
+  // Enforce a minimum display time of 1.2s for the overlay
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (preloadReadyRef.current) setIsPreloaded(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handlePreloadComplete = React.useCallback(() => {
+    preloadReadyRef.current = true;
+    // If the minimum time has already passed, dismiss immediately
+    setTimeout(() => setIsPreloaded(true), 0);
+  }, []);
   const { user, loading } = useUser();
 
   // If user is admin/staff, they shouldn't see the landing page
@@ -180,7 +195,7 @@ export default function Home() {
         variants={CONFIG.variants}
         shopName={CONFIG.shopName}
         tagline={CONFIG.tagline}
-        onPreloadComplete={() => setIsPreloaded(true)}
+        onPreloadComplete={handlePreloadComplete}
       />
       
       <ArtisanStories />
