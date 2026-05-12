@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
           Reset Password
         </h1>
         <p className="text-[var(--color-on-surface-variant)] font-body text-base">
-          Enter your email and we'll send you instructions to reset your password.
+          Enter your email and we&apos;ll send you instructions to reset your password.
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export default function ForgotPasswordPage() {
           <CheckCircle2 size={48} className="mx-auto text-emerald-400 mb-4" />
           <h2 className="font-heading text-2xl text-white mb-2">Check your email</h2>
           <p className="text-emerald-400/80 text-sm mb-6">
-            We've sent password reset instructions to <strong>{email}</strong>.
+            We&apos;ve sent password reset instructions to <strong>{email}</strong>.
           </p>
           <Link
             href="/auth/login"

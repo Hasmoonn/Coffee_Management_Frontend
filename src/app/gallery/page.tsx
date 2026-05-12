@@ -1,10 +1,11 @@
 // app/gallery/page.tsx
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { X, ZoomIn, ArrowLeft, ArrowRight, Play } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -165,14 +166,14 @@ export default function GalleryPage() {
 
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
-  const prevImage = () =>
+  const prevImage = useCallback(() =>
     setLightboxIndex((prev) =>
       prev !== null ? (prev === 0 ? filtered.length - 1 : prev - 1) : null
-    );
-  const nextImage = () =>
+    ), [filtered.length]);
+  const nextImage = useCallback(() =>
     setLightboxIndex((prev) =>
       prev !== null ? (prev === filtered.length - 1 ? 0 : prev + 1) : null
-    );
+    ), [filtered.length]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -184,7 +185,7 @@ export default function GalleryPage() {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [lightboxIndex]);
+  }, [lightboxIndex, prevImage, nextImage]);
 
   return (
     <main className="min-h-screen bg-[var(--color-background)] text-[var(--color-on-background)]">
@@ -196,10 +197,13 @@ export default function GalleryPage() {
         className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden"
       >
         <motion.div style={{ y: heroY }} className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1920&h=1080&fit=crop"
             alt="Gallery Hero"
-            className="w-full h-full object-cover scale-110"
+            fill
+            className="object-cover scale-110"
+            priority
+            sizes="100vw"
           />
         </motion.div>
 
@@ -385,19 +389,23 @@ function GalleryCard({
       className="break-inside-avoid mb-4 group relative overflow-hidden rounded-2xl border border-[var(--color-outline-variant)] cursor-pointer"
       onClick={onClick}
     >
-      <div className="relative overflow-hidden">
-        <motion.img
+      <div
+        className="relative overflow-hidden"
+        style={{
+          aspectRatio:
+            item.size === "tall"
+              ? "3/4"
+              : item.size === "wide"
+              ? "16/9"
+              : "1/1",
+        }}
+      >
+        <Image
           src={item.image}
           alt={item.title}
-          className="w-full object-cover transition-transform duration-700 group-hover:scale-110"
-          style={{
-            aspectRatio:
-              item.size === "tall"
-                ? "3/4"
-                : item.size === "wide"
-                ? "16/9"
-                : "1/1",
-          }}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           loading="lazy"
         />
 
@@ -479,10 +487,12 @@ function FilmStripSection() {
               key={i}
               className="relative flex-shrink-0 w-48 h-32 rounded-xl overflow-hidden border border-[var(--color-outline-variant)] group"
             >
-              <img
+              <Image
                 src={src}
                 alt=""
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500 group-hover:scale-110 transition-transform"
+                fill
+                className="object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500 group-hover:scale-110 transition-transform"
+                sizes="192px"
               />
               {/* Film perforation dots */}
               <div className="absolute top-2 left-2 right-2 flex justify-between pointer-events-none">
@@ -512,10 +522,12 @@ function FilmStripSection() {
               key={i}
               className="relative flex-shrink-0 w-48 h-32 rounded-xl overflow-hidden border border-[var(--color-outline-variant)] group"
             >
-              <img
+              <Image
                 src={src}
                 alt=""
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-85 transition-opacity duration-500 group-hover:scale-110 transition-transform"
+                fill
+                className="object-cover opacity-50 group-hover:opacity-85 transition-opacity duration-500 group-hover:scale-110 transition-transform"
+                sizes="192px"
               />
               <div className="absolute top-2 left-2 right-2 flex justify-between pointer-events-none">
                 {[...Array(5)].map((_, j) => (
@@ -541,10 +553,12 @@ function CtaSection() {
     <section className="relative py-36 px-6 md:px-12 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1920&h=800&fit=crop"
           alt=""
-          className="w-full h-full object-cover opacity-20"
+          fill
+          className="object-cover opacity-20"
+          sizes="100vw"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/80 to-[var(--color-background)]" />
@@ -655,11 +669,15 @@ function Lightbox({
         className="relative max-w-5xl max-h-[80vh] w-full mx-16 rounded-2xl overflow-hidden border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.7)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-          src={item.image}
-          alt={item.title}
-          className="w-full h-full object-contain max-h-[75vh]"
-        />
+        <div className="relative w-full h-[75vh]">
+          <Image
+            src={item.image}
+            alt={item.title}
+            fill
+            className="object-contain"
+            sizes="100vw"
+          />
+        </div>
 
         {/* Bottom info */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-8">

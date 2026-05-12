@@ -19,6 +19,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -148,10 +149,13 @@ export default function MenuPage() {
         className="relative h-[65vh] min-h-[480px] flex items-center justify-center overflow-hidden"
       >
         <motion.div style={{ y: heroY }} className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&h=1080&fit=crop"
             alt="Menu Hero"
-            className="w-full h-full object-cover scale-110"
+            fill
+            className="object-cover scale-110"
+            priority
+            sizes="100vw"
           />
         </motion.div>
         <div className="absolute inset-0 bg-black/55" />
@@ -306,25 +310,31 @@ export default function MenuPage() {
         >
           {/* Banner */}
           <div className="relative h-[220px] md:h-[300px] overflow-hidden">
-            <motion.img
+            <motion.div
               key={resolvedSlug + "-img"}
               initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              src={
-                isAllView
-                  ? "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1920&h=600&fit=crop"
-                  : getImageUrl(activeCategory?.imageUrl ||
-                    categoryData?.category?.imageUrl ||
-                    FALLBACK_IMAGE)
-              }
-              alt={
-                isAllView
-                  ? "All Menu Items"
-                  : activeCategory?.name ?? categoryData?.category?.name ?? ""
-              }
-              className="w-full h-full object-cover"
-            />
+              className="absolute inset-0"
+            >
+              <Image
+                src={
+                  isAllView
+                    ? "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1920&h=600&fit=crop"
+                    : getImageUrl(activeCategory?.imageUrl ||
+                      categoryData?.category?.imageUrl ||
+                      FALLBACK_IMAGE)
+                }
+                alt={
+                  isAllView
+                    ? "All Menu Items"
+                    : activeCategory?.name ?? categoryData?.category?.name ?? ""
+                }
+                fill
+                className="object-cover"
+                sizes="100vw"
+              />
+            </motion.div>
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-black/40 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
 
@@ -470,10 +480,12 @@ function MenuItemCard({
         className="relative h-52 overflow-hidden cursor-pointer"
         onClick={onSelect}
       >
-        <motion.img
+        <Image
           src={getImageUrl(item.imageUrl || FALLBACK_IMAGE)}
           alt={item.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
@@ -615,14 +627,20 @@ function ItemDetailModal({
       >
         {/* Image Section */}
         <div className="relative w-full md:w-[45%] h-72 md:h-auto overflow-hidden shrink-0">
-          <motion.img
+          <motion.div
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            src={getImageUrl(item.imageUrl || FALLBACK_IMAGE)}
-            alt={item.name}
-            className="w-full h-full object-cover"
-          />
+            className="w-full h-full"
+          >
+            <Image
+              src={getImageUrl(item.imageUrl || FALLBACK_IMAGE)}
+              alt={item.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 45vw"
+            />
+          </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/60 via-transparent to-transparent md:from-black/20" />
           
           <div className="absolute bottom-6 left-6 flex gap-2 flex-wrap">
@@ -833,11 +851,13 @@ function CartDrawer({
                 exit={{ opacity: 0, x: -20 }}
                 className="flex items-center gap-4 p-4 rounded-xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
               >
-                <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-[var(--color-outline-variant)]">
-                  <img
+                <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-[var(--color-outline-variant)] relative">
+                  <Image
                     src={item.imageUrl || FALLBACK_IMAGE}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="48px"
                   />
                 </div>
 
@@ -973,11 +993,13 @@ function PairingSection() {
                 {String(i + 1).padStart(2, "0")}
               </div>
               <div className="relative z-10">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] mb-5">
-                  <img
+                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] mb-5 relative">
+                  <Image
                     src={pair.image}
                     alt={pair.food}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="80px"
                   />
                 </div>
                 <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -1011,10 +1033,12 @@ function BottomCta() {
   return (
     <section className="relative py-36 px-6 md:px-12 overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1920&h=800&fit=crop"
           alt=""
-          className="w-full h-full object-cover opacity-15"
+          fill
+          className="object-cover opacity-15"
+          sizes="100vw"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/85 to-[var(--color-background)]" />

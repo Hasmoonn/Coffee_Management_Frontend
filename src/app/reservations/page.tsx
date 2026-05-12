@@ -30,6 +30,7 @@ import {
   Lock,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -333,10 +334,13 @@ export default function ReservationPage() {
         className="relative h-[60vh] min-h-[460px] flex items-center justify-center overflow-hidden"
       >
         <motion.div style={{ y: heroY }} className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920&h=1080&fit=crop"
             alt="Reservation"
-            className="w-full h-full object-cover scale-110"
+            fill
+            className="object-cover scale-110"
+            priority
+            sizes="100vw"
           />
         </motion.div>
 
@@ -946,10 +950,12 @@ function StepPreferences({
                 }`}
               >
                 <div className="relative h-36 overflow-hidden">
-                  <img
+                  <Image
                     src={seat.image}
                     alt={seat.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, 25vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface-container-low)] to-transparent" />
 
@@ -1287,10 +1293,12 @@ function StepReview({
       <div className="max-w-lg mx-auto">
         <div className="rounded-2xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] overflow-hidden">
           <div className="relative h-40 overflow-hidden">
-            <img
+            <Image
               src={selectedSeating?.image ?? SEATING_OPTIONS[0].image}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 40vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface-container-low)] via-black/20 to-transparent" />
             <div className="absolute bottom-4 left-5">
@@ -1607,10 +1615,12 @@ function LocationInfo() {
   return (
     <section className="relative py-28 px-6 md:px-12 overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1920&h=800&fit=crop"
           alt=""
-          className="w-full h-full object-cover opacity-12"
+          fill
+          className="object-cover opacity-12"
+          sizes="100vw"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/85 to-[var(--color-background)]" />

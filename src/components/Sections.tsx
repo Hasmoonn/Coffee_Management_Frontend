@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useFeaturedItems } from "@/hooks/useMenu";
 import { useCart } from "@/hooks/useCart";
 import { useUser } from "@/hooks/useUser";
@@ -243,15 +244,21 @@ function DrinkCard({
       className="group relative h-[580px] rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] cursor-pointer shadow-xl hover:shadow-[0_40px_80px_rgba(0,0,0,0.4)] transition-shadow duration-700"
     >
       {/* Image */}
-      <motion.img
-        src={getImageUrl(item.imageUrl)}
-        alt={item.name}
-        className="absolute inset-0 w-full h-full object-cover"
+      <motion.div
+        className="absolute inset-0 w-full h-full"
         initial={{ scale: 1.05 }}
         whileInView={{ scale: 1 }}
         whileHover={{ scale: 1.07 }}
         transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] as any }}
-      />
+      >
+        <Image
+          src={getImageUrl(item.imageUrl)}
+          alt={item.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+      </motion.div>
 
       {/* Gradient overlays */}
       <div
@@ -335,10 +342,12 @@ function StorySection() {
             className="relative h-[400px] xs:h-[500px] lg:h-[700px] rounded-2xl overflow-hidden border border-[var(--color-outline-variant)] shadow-[0_32px_80px_rgba(0,0,0,0.35)]"
           >
             <motion.div className="absolute inset-0" style={{ y: imgY }}>
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=900&h=1200&fit=crop"
                 alt="Barista crafting coffee"
-                className="w-full h-full object-cover scale-110"
+                fill
+                className="object-cover scale-110"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </motion.div>
 
@@ -618,7 +627,7 @@ function TestimonialsSection() {
             >
               {/* Quote mark */}
               <div className="absolute top-4 right-6 font-heading text-[100px] leading-none text-[var(--color-secondary)]/8 select-none font-bold">
-                "
+                &quot;
               </div>
 
               <div className="flex gap-1 mb-6">
@@ -632,7 +641,7 @@ function TestimonialsSection() {
               </div>
 
               <p className="font-body text-[var(--color-on-surface)] leading-relaxed mb-8 text-base italic relative z-10">
-                "{review.text}"
+                &quot;{review.text}&quot;
               </p>
 
               <div className="flex items-center gap-4">

@@ -6,7 +6,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
 import { useCart } from "@/hooks/useCart";
-import { Minus, Plus, Trash2, ArrowRight, ShoppingBag, Coffee } from "lucide-react";
+import { ShoppingBag, Coffee, Minus, Plus, Trash2, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import { apiFetch } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
@@ -81,7 +82,7 @@ export default function CartPage() {
             <Coffee size={64} className="mx-auto text-[var(--color-secondary)] opacity-30 mb-6" />
             <h2 className="font-heading text-3xl mb-4 text-[var(--color-on-surface)]">Your cart is empty</h2>
             <p className="text-[var(--color-on-surface-variant)] mb-8">
-              Looks like you haven't added any artisanal beverages or treats yet.
+              Looks like you haven&apos;t added any artisanal beverages or treats yet.
             </p>
             <button 
               onClick={() => router.push("/menu")}
@@ -106,7 +107,13 @@ export default function CartPage() {
                   >
                     <div className="w-full md:w-24 h-24 bg-[var(--color-surface-container)] rounded-xl overflow-hidden flex-shrink-0 relative">
                       {item.menuItem.imageUrl ? (
-                        <img src={item.menuItem.imageUrl} alt={item.menuItem.name} className="w-full h-full object-cover" />
+                        <Image
+                          src={item.menuItem.imageUrl}
+                          alt={item.menuItem.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 96px"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[var(--color-secondary)]/50">
                           <Coffee size={32} />

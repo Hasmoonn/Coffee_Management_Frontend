@@ -30,7 +30,7 @@ function SteamPath({ d, delay }: { d: string; delay: number }) {
   );
 }
 
-// Deterministic bean configs — no Math.random() to avoid hydration mismatch
+// Deterministic bean configs
 const BEANS = [
   { left: "15%", bottom: "20%", duration: 6.2, delay: 0 },
   { left: "35%", bottom: "35%", duration: 5.4, delay: 1.8 },
@@ -40,7 +40,6 @@ const BEANS = [
   { left: "80%", bottom: "25%", duration: 4.8, delay: 1.2 },
 ];
 
-// Floating coffee bean SVG
 function CoffeeBean({ style, duration, delay }: { style: React.CSSProperties; duration: number; delay: number }) {
   return (
     <motion.svg
@@ -66,9 +65,9 @@ function CoffeeBean({ style, duration, delay }: { style: React.CSSProperties; du
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-[100dvh] flex flex-col lg:flex-row bg-[var(--color-background)]">
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] bg-[var(--color-background)]">
       {/* === LEFT CINEMATIC PANEL === */}
-      <div className="hidden lg:flex lg:w-[52%] h-full relative overflow-hidden bg-[#0e0906] flex-col items-center justify-center">
+      <div className="hidden lg:flex relative h-screen sticky top-0 overflow-hidden bg-[#0e0906] flex-col items-center justify-center">
         {/* Deep gradient layers */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f08] via-[#0e0906] to-[#000000]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#c4a88220] via-transparent to-transparent" />
@@ -118,9 +117,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <SteamPath d="M 110 120 Q 130 80 110 40 T 110 -10" delay={0.6} />
           </svg>
 
-          {/* Coffee Cup SVG — large, detailed */}
+          {/* Coffee Cup SVG */}
           <svg width="200" height="240" viewBox="0 0 200 240" fill="none" className="drop-shadow-[0_0_60px_rgba(196,168,130,0.25)]">
-            {/* Cup body fill */}
             <motion.path
               d="M 35 70 L 165 70 L 148 200 C 148 210 138 215 120 215 L 80 215 C 62 215 52 210 52 200 Z"
               fill="url(#authCupGrad)"
@@ -128,7 +126,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ opacity: 1 }}
               transition={{ duration: 1.5 }}
             />
-            {/* Cup body stroke */}
             <motion.path
               d="M 35 70 L 165 70 L 148 200 C 148 210 138 215 120 215 L 80 215 C 62 215 52 210 52 200 Z"
               stroke="rgba(196,168,130,0.7)"
@@ -139,7 +136,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ pathLength: 1 }}
               transition={{ duration: 2, ease: "easeInOut" }}
             />
-            {/* Lid fill */}
             <motion.path
               d="M 28 70 L 172 70 L 163 52 C 160 44 154 40 140 40 L 60 40 C 46 40 40 44 37 52 Z"
               fill="rgba(196,168,130,0.15)"
@@ -147,7 +143,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
             />
-            {/* Lid stroke */}
             <motion.path
               d="M 28 70 L 172 70 L 163 52 C 160 44 154 40 140 40 L 60 40 C 46 40 40 44 37 52 Z"
               stroke="rgba(196,168,130,0.7)"
@@ -158,7 +153,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ pathLength: 1 }}
               transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
             />
-            {/* Sipper */}
             <motion.path
               d="M 82 40 L 82 28 C 82 20 88 16 96 16 L 104 16 C 112 16 118 20 118 28 L 118 40"
               stroke="rgba(196,168,130,0.7)"
@@ -169,7 +163,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ pathLength: 1 }}
               transition={{ duration: 0.8, delay: 1.2, ease: "easeInOut" }}
             />
-            {/* Sleeve band top */}
             <motion.path
               d="M 43 100 L 157 100"
               stroke="rgba(196,168,130,0.4)"
@@ -179,7 +172,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ pathLength: 1 }}
               transition={{ duration: 0.8, delay: 1.8 }}
             />
-            {/* Sleeve band bottom */}
             <motion.path
               d="M 50 155 L 150 155"
               stroke="rgba(196,168,130,0.4)"
@@ -189,7 +181,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               animate={{ pathLength: 1 }}
               transition={{ duration: 0.8, delay: 2 }}
             />
-            {/* Logo text on cup */}
             <motion.text
               x="100"
               y="140"
@@ -204,8 +195,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             >
               Brew &amp; Co.
             </motion.text>
-
-            {/* Defs */}
             <defs>
               <linearGradient id="authCupGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="rgba(196,168,130,0.08)" />
@@ -234,14 +223,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </motion.div>
 
-        {/* Corner decorative bracket — top left */}
         <div className="absolute top-8 left-8 w-10 h-10 border-t border-l border-[#c4a882]/20" />
-        {/* Corner decorative bracket — bottom right */}
         <div className="absolute bottom-8 right-8 w-10 h-10 border-b border-r border-[#c4a882]/20" />
       </div>
 
       {/* === RIGHT FORM PANEL === */}
-      <div className="w-full lg:w-[48%] min-h-[100dvh] flex flex-col">
+      <div className="flex flex-col min-h-screen bg-[var(--color-background)] relative z-20">
         {/* Mobile brand header */}
         <div className="lg:hidden flex-shrink-0 flex items-center justify-between px-6 py-5 border-b border-[var(--color-outline-variant)]">
           <Link href="/" className="font-heading italic text-2xl text-[var(--color-secondary)]">
@@ -252,12 +239,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </Link>
         </div>
 
-        {/* Form content — centered */}
+        {/* Form content */}
         <div className="flex-1 flex items-center justify-center px-6 py-12 md:px-16">
           {children}
         </div>
 
-        {/* Footer note */}
+        {/* Mobile Footer */}
         <div className="flex-shrink-0 px-6 py-8 text-center lg:hidden">
           <p suppressHydrationWarning className="text-[var(--color-on-surface-variant)] font-label text-xs tracking-wider opacity-60">
             &copy; {new Date().getFullYear()} Brew &amp; Co. All rights reserved.

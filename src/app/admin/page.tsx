@@ -36,6 +36,7 @@ import {
   Award
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 type TabType = "overview" | "orders" | "reservations" | "menu" | "users";
 
@@ -394,8 +395,14 @@ export default function AdminDashboard() {
                       <div className="space-y-6">
                         {stats?.bestSellers?.slice(0, 4).map((item: any, i: number) => (
                           <div key={i} className="flex items-center gap-5 group/item">
-                            <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/5 group-hover/item:border-amber-400/30 transition-all flex-shrink-0">
-                               <img src={getImageUrl(item.imageUrl)} alt={item.name} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-700" />
+                            <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/5 group-hover/item:border-amber-400/30 transition-all flex-shrink-0 relative">
+                               <Image
+                                 src={getImageUrl(item.imageUrl)}
+                                 alt={item.name}
+                                 fill
+                                 className="object-cover group-hover/item:scale-110 transition-transform duration-700"
+                                 sizes="56px"
+                               />
                             </div>
                             <div className="flex-1 flex flex-col min-w-0">
                                <span className="text-sm font-bold text-white truncate mb-1 group-hover/item:text-amber-400 transition-colors">{item.name}</span>
@@ -560,7 +567,7 @@ export default function AdminDashboard() {
 
                     {res.specialRequests && (
                       <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 text-xs italic text-white/40 leading-relaxed font-body">
-                        "{res.specialRequests}"
+                        &quot;{res.specialRequests}&quot;
                       </div>
                     )}
 
@@ -626,10 +633,12 @@ export default function AdminDashboard() {
                     >
                       <div className="h-60 relative overflow-hidden bg-[#0c0908]">
                         {item.imageUrl ? (
-                          <img 
-                            src={getImageUrl(item.imageUrl)} 
-                            alt={item.name} 
-                            className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-110 transition-all duration-1000 ease-out" 
+                          <Image
+                            src={getImageUrl(item.imageUrl)}
+                            alt={item.name}
+                            fill
+                            className="object-cover opacity-70 group-hover:opacity-90 group-hover:scale-110 transition-all duration-1000 ease-out"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center opacity-20"><Coffee size={64} /></div>
@@ -654,7 +663,7 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <p className="text-xs text-white/30 font-body line-clamp-2 mb-8 min-h-[40px] leading-relaxed italic">
-                          "{item.description}"
+                          &quot;{item.description}&quot;
                         </p>
                         <div className="flex gap-4">
                           <button 
@@ -860,7 +869,13 @@ function MenuItemModal({ isOpen, onClose, categories, onSubmit, initialData }: a
             <div className="flex-1 flex flex-col justify-center">
               <div className="relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 group cursor-pointer shadow-inner">
                 {preview ? (
-                  <img src={preview} alt="Preview" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                  <Image
+                    src={preview}
+                    alt="Preview"
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-white/20 gap-4 p-10 text-center">
                     <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center border border-white/5 mb-2">

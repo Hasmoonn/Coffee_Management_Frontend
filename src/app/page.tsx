@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import Navigation from "@/components/Navigation";
 import ParallaxHero, { DrinkVariant } from "@/components/ParallaxHero";
-import ArtisanStories from "@/components/ArtisanStories";
-import Sections from "@/components/Sections";
-import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
 import { motion, AnimatePresence } from "framer-motion";
+
+const ArtisanStories = dynamic(() => import("@/components/ArtisanStories"));
+const Sections = dynamic(() => import("@/components/Sections"));
+const Footer = dynamic(() => import("@/components/Footer"));
 
 const CONFIG = {
   shopName: "Brew & Co.",

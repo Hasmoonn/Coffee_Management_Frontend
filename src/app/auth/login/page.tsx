@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   return (
     <motion.div
-      className="w-full max-w-[420px] py-6 lg:py-12"
+      className="w-full max-w-[420px]"
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -55,7 +55,7 @@ export default function LoginPage() {
       {/* Back to home — desktop */}
       <Link
         href="/"
-        className="hidden lg:inline-flex items-center gap-2 text-[var(--color-on-surface-variant)] font-label text-xs tracking-widest uppercase hover:text-[var(--color-secondary)] transition-colors mb-12 mt-24"
+        className="hidden lg:inline-flex items-center gap-2 text-[var(--color-on-surface-variant)] font-label text-xs tracking-widest uppercase hover:text-[var(--color-secondary)] transition-colors mb-6"
       >
         <span className="text-lg leading-none">←</span> Back to Home
       </Link>

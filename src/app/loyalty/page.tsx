@@ -3,12 +3,9 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import {
-  Crown, Coffee, Gift, Zap, Heart, Award, ChevronRight, Check,
-  Sparkles, TrendingUp, Users, Clock, Gem, Shield, PartyPopper,
-  Loader2, AlertCircle, CheckCircle2, Lock,
-} from "lucide-react";
+import { Crown, Coffee, Gift, Zap, Heart, Award, ChevronRight, Check, Sparkles, TrendingUp, Users, Clock, Gem, Shield, PartyPopper, Loader2, AlertCircle, CheckCircle2, Lock } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -219,10 +216,13 @@ export default function LoyaltyPage() {
         className="relative h-[70vh] min-h-[520px] flex items-center justify-center overflow-hidden"
       >
         <motion.div style={{ y: heroY }} className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1920&h=1080&fit=crop"
             alt="Loyalty Program"
-            className="w-full h-full object-cover scale-110"
+            fill
+            className="object-cover scale-110"
+            priority
+            sizes="100vw"
           />
         </motion.div>
 
@@ -924,10 +924,12 @@ function RewardCard({
       className="group relative rounded-2xl border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] overflow-hidden hover:border-[var(--color-secondary)]/30 hover:shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition-all duration-500"
     >
       <div className="relative h-48 overflow-hidden">
-        <motion.img
+        <Image
           src={meta.image}
           alt={reward.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface-container-low)] via-black/10 to-transparent" />
 
@@ -1074,10 +1076,12 @@ function CtaSection({ loggedIn }: { loggedIn: boolean }) {
   return (
     <section className="relative py-36 px-6 md:px-12 overflow-hidden">
       <div className="absolute inset-0">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1920&h=800&fit=crop"
           alt=""
-          className="w-full h-full object-cover opacity-15"
+          fill
+          className="object-cover opacity-15"
+          sizes="100vw"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/85 to-[var(--color-background)]" />
