@@ -233,7 +233,7 @@ export default function AdminDashboard() {
                   <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[
-                    { label: "Total Revenue", value: `$${stats?.totalRevenue?.toFixed(2) || "0.00"}`, icon: TrendingUp, color: "text-green-400", bg: "bg-green-400/10" },
+                    { label: "Total Revenue", value: `RS.${stats?.totalRevenue?.toFixed(2) || "0.00"}`, icon: TrendingUp, color: "text-green-400", bg: "bg-green-400/10" },
                     { label: "Total Orders", value: stats?.totalOrders || "0", icon: ShoppingBag, color: "text-[var(--color-secondary)]", bg: "bg-[var(--color-secondary)]/10" },
                     { label: "Pending Reservations", value: stats?.pendingReservations || "0", icon: CalendarDays, color: "text-orange-400", bg: "bg-orange-400/10" },
                     { label: "Total Users", value: stats?.totalUsers || "0", icon: Users, color: "text-purple-400", bg: "bg-purple-400/10" },
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                           <div className="flex flex-col items-end gap-2">
-                            <span className="text-sm font-bold text-[var(--color-secondary)]">${order.finalAmount.toFixed(2)}</span>
+                            <span className="text-sm font-bold text-[var(--color-secondary)]">RS.{order.finalAmount.toFixed(2)}</span>
                             <span className="text-[8px] font-label uppercase tracking-widest px-3 py-1 rounded-full bg-white/5 text-white/30 border border-white/5">
                               {order.status}
                             </span>
@@ -369,7 +369,7 @@ export default function AdminDashboard() {
                                   className="w-[60%] bg-gradient-to-t from-[var(--color-secondary)]/10 via-[var(--color-secondary)] to-white/20 rounded-t-xl relative shadow-[0_0_40px_rgba(196,168,130,0.1)] group-hover/bar:brightness-125 transition-all"
                                 >
                                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-xl border border-white/10 px-3 py-1.5 rounded-lg opacity-0 group-hover/bar:opacity-100 transition-all pointer-events-none scale-90 group-hover/bar:scale-100">
-                                      <span className="text-[10px] font-bold text-white">${currentRevenue.toFixed(0)}</span>
+                                      <span className="text-[10px] font-bold text-white">RS.{currentRevenue.toFixed(0)}</span>
                                    </div>
                                 </motion.div>
                               </div>
@@ -491,7 +491,7 @@ export default function AdminDashboard() {
                                 </span>
                               </td>
                               <td className="p-8">
-                                <span className="text-lg font-heading text-white">${order.finalAmount.toFixed(2)}</span>
+                                <span className="text-lg font-heading text-white">RS.{order.finalAmount.toFixed(2)}</span>
                               </td>
                               <td className="p-8">
                                 <div className="flex items-center gap-3">
@@ -645,7 +645,7 @@ export default function AdminDashboard() {
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#1a120b] via-transparent to-transparent" />
                         <div className="absolute top-6 right-6 bg-black/60 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-white/10 shadow-2xl">
-                          <span className="text-lg font-heading italic text-[var(--color-secondary)]">${item.price.toFixed(2)}</span>
+                          <span className="text-lg font-heading italic text-[var(--color-secondary)]">RS.{item.price.toFixed(2)}</span>
                         </div>
                         {!item.isAvailable && (
                           <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center">
@@ -946,17 +946,17 @@ function MenuItemModal({ isOpen, onClose, categories, onSubmit, initialData }: a
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                   <div className="relative group">
                     <label className="text-[9px] uppercase tracking-[0.4em] text-white/30 font-label mb-3 block ml-1 group-focus-within:text-[var(--color-secondary)] transition-colors">
-                      Price (USD)
+                      Price (LKR)
                     </label>
                     <div className="relative">
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 text-white/20 font-heading italic text-xl">$</span>
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 text-white/20 font-heading italic text-xl">RS. </span>
                       <input
                         type="number"
                         step="0.01"
                         required
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        className="w-full bg-transparent border-b border-white/10 py-4 pl-6 text-xl text-white outline-none focus:border-[var(--color-secondary)] transition-all font-heading italic"
+                        className="w-full bg-transparent border-b border-white/10 py-4 pl-8 text-xl text-white outline-none focus:border-[var(--color-secondary)] transition-all font-heading italic"
                         placeholder="0.00"
                       />
                     </div>

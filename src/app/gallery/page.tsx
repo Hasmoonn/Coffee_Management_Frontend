@@ -604,7 +604,7 @@ function CtaSection() {
 
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
             <Link
-              href="#menu"
+              href="/menu"
               className="inline-flex items-center gap-3 px-9 py-4 rounded-full border border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] font-label uppercase tracking-[0.2em] text-xs hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)] transition-all"
             >
               View Menu
